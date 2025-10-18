@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Send, ArrowLeft, Menu, Image as ImageIcon, File, Link as LinkIcon, Mic, Users, Settings, Sun, Moon } from 'lucide-react';
-import { contacts, messages, currentUser, mediaGallery, stickers } from '../mockData';
+import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Send, Menu, Image as ImageIcon, File, Link as LinkIcon, Mic, Users, Settings, Sun, Moon, Trash2, Bot } from 'lucide-react';
+import { initialContacts, initialMessages, currentUser, stickers, botCommands, commonCommands } from '../mockData';
+import { saveContacts, getContacts, saveMessages, getMessages, saveTheme, getTheme, saveUser, getUser } from '../utils/localStorage';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
@@ -8,6 +9,7 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { Badge } from '../components/ui/badge';
 import { toast } from '../hooks/use-toast';
 
 const ChatApp = () => {
