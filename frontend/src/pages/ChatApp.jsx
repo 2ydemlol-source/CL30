@@ -13,18 +13,36 @@ import { Badge } from '../components/ui/badge';
 import { toast } from '../hooks/use-toast';
 
 const ChatApp = () => {
+  // Initialize state from localStorage or defaults
+  const [contacts, setContacts] = useState(() => getContacts() || initialContacts);
+  const [allMessages, setAllMessages] = useState(() => getMessages() || initialMessages);
+  const [user, setUser] = useState(() => getUser() || currentUser);
   const [selectedChat, setSelectedChat] = useState(contacts[0]);
-  const [chatMessages, setChatMessages] = useState(messages[contacts[0].id] || []);
+  const [chatMessages, setChatMessages] = useState(allMessages[contacts[0].id] || []);
   const [messageInput, setMessageInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showGallery, setShowGallery] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => getTheme() === 'dark');
   const [showSidebar, setShowSidebar] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
   const messagesEndRef = useRef(null);
 
+  // Save to localStorage whenever data changes
   useEffect(() => {
+    saveContacts(contacts);
+  }, [contacts]);
+
+  useEffect(() => {
+    saveMessages(allMessages);
+  }, [allMessages]);
+
+  useEffect(() => {
+    saveUser(user);
+  }, [user]);
+
+  useEffect(() => {
+    saveTheme(darkMode ? 'dark' : 'light');
     if (darkMode) {
       document.documentElement.classList.add('dark');
     } else {
