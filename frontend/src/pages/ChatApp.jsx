@@ -1122,6 +1122,17 @@ const ChatApp = () => {
               <div className="bg-zinc-900 rounded-lg p-4">
                 <h4 className="font-semibold mb-2">Быстрые действия</h4>
                 <div className="space-y-2">
+                  {/* Gift Button - Show for contacts and channels, but not bots or self */}
+                  {!selectedChat.isBot && selectedChat.id !== user.id && (
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-sm hover:bg-zinc-800 text-[#2fa34e] hover:text-[#2fa34e]"
+                      onClick={() => setShowGiftShop(true)}
+                    >
+                      <Gift className="w-4 h-4 mr-2" />
+                      Подарить подарок 🎁
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     className="w-full justify-start text-sm hover:bg-zinc-800"
@@ -1132,6 +1143,32 @@ const ChatApp = () => {
                   </Button>
                 </div>
               </div>
+
+              {/* Gifts Received Section */}
+              {selectedChat.receivedGifts && selectedChat.receivedGifts.length > 0 && (
+                <div className="bg-zinc-900 rounded-lg p-4">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Gift className="w-4 h-4 text-[#2fa34e]" />
+                    Полученные подарки ({selectedChat.receivedGifts.length})
+                  </h4>
+                  <div className="space-y-3">
+                    {selectedChat.receivedGifts.slice(-3).reverse().map((receivedGift) => (
+                      <div key={receivedGift.id} className="bg-zinc-800 rounded-lg p-3 flex items-center gap-3">
+                        <img
+                          src={receivedGift.gift.image}
+                          alt={receivedGift.gift.nameRu}
+                          className="w-12 h-12 object-contain"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold truncate">{receivedGift.gift.nameRu}</p>
+                          <p className="text-xs text-zinc-400 truncate">От: {receivedGift.from.name}</p>
+                          <p className="text-xs text-zinc-500">{receivedGift.timestamp}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </ScrollArea>
         </div>
