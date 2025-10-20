@@ -16,7 +16,21 @@ import GiftMessage from '../components/GiftMessage';
 
 const ChatApp = () => {
   // Initialize state from localStorage or defaults
-  const [contacts, setContacts] = useState(() => getContacts() || initialContacts);
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = getContacts();
+    if (savedContacts) {
+      // Ensure all contacts have receivedGifts array
+      return savedContacts.map(c => ({
+        ...c,
+        receivedGifts: c.receivedGifts || []
+      }));
+    }
+    // Initialize with receivedGifts for new contacts
+    return initialContacts.map(c => ({
+      ...c,
+      receivedGifts: []
+    }));
+  });
   const [allMessages, setAllMessages] = useState(() => getMessages() || initialMessages);
   const [user, setUser] = useState(() => getUser() || currentUser);
   const [customCommands, setCustomCommands] = useState(() => getCustomCommands() || {});
