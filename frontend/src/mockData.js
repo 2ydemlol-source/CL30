@@ -249,6 +249,16 @@ export const initialMessages = {
       type: 'text',
       status: 'read'
     }
+  ],
+  'gift-bot': [
+    {
+      id: 'msg-gift-1',
+      senderId: 'gift-bot',
+      content: '🎁 Привет! Я Gift Bot - помощник по подаркам и звёздам!\n\nСтатус: Дарит настроение ✨\n\nКоманды:\n/create [имя] [цена] [ссылка] - создать свой подарок\n\nПример:\n/create Роза 25 https://example.com/rose.png\n\nМин. цена: 10★, макс. цена: 5000★',
+      timestamp: '9:00 AM',
+      type: 'text',
+      status: 'read'
+    }
   ]
 };
 
