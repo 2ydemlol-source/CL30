@@ -114,6 +114,10 @@ const ChatApp = () => {
   }, [customCommands]);
 
   useEffect(() => {
+    saveCustomGifts(customGifts);
+  }, [customGifts]);
+
+  useEffect(() => {
     localStorage.setItem('icq_background', customBackground);
   }, [customBackground]);
 
