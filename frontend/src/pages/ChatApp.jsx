@@ -13,6 +13,7 @@ import { Label } from '../components/ui/label';
 import { toast } from '../hooks/use-toast';
 import GiftShop from '../components/GiftShop';
 import GiftMessage from '../components/GiftMessage';
+import MyProfileModal from '../components/MyProfileModal';
 
 const ChatApp = () => {
   // Initialize state from localStorage or defaults
