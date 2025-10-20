@@ -1877,6 +1877,15 @@ const ChatApp = () => {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Gift Shop Modal */}
+      <GiftShop
+        isOpen={showGiftShop}
+        onClose={() => setShowGiftShop(false)}
+        recipient={selectedChat}
+        userStars={user.stars || 0}
+        onSendGift={handleSendGift}
+      />
     </div>
   );
 };
