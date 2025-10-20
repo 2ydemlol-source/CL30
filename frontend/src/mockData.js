@@ -45,6 +45,20 @@ export const availableGifts = [
 
 export const initialContacts = [
   {
+    id: 'favorites',
+    name: 'Избранное',
+    usernames: ['favorites'],
+    avatar: 'https://cdn-icons-png.flaticon.com/512/7656/7656139.png',
+    status: 'online',
+    lastSeen: null,
+    unreadCount: 0,
+    lastMessage: 'Ваши сохранённые сообщения',
+    lastMessageTime: '',
+    isBot: false,
+    isFavorite: true,
+    isPinned: true
+  },
+  {
     id: 'demka',
     name: 'Demka',
     usernames: ['developer', 'abc'],
