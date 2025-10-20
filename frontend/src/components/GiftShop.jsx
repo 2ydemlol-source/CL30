@@ -59,7 +59,7 @@ const GiftShop = ({ isOpen, onClose, recipient, userStars, onSendGift, customGif
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {availableGifts.map((gift) => (
+              {allGifts.map((gift) => (
                 <div
                   key={gift.id}
                   onClick={() => handleGiftSelect(gift)}
@@ -78,6 +78,9 @@ const GiftShop = ({ isOpen, onClose, recipient, userStars, onSendGift, customGif
                       />
                     </div>
                     <h3 className="text-lg font-semibold mb-2">{gift.nameRu}</h3>
+                    {gift.isCustom && (
+                      <p className="text-xs text-zinc-400 mb-1">от {gift.createdBy}</p>
+                    )}
                     <div className="flex items-center gap-1 text-yellow-500">
                       <Star className="w-4 h-4 fill-yellow-500" />
                       <span className="font-bold">{gift.price}</span>
