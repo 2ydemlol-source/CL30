@@ -355,6 +355,64 @@ const ChatApp = () => {
     }
   };
 
+  const handleSendGift = (gift) => {
+    // Deduct stars from user
+    const updatedUser = {
+      ...user,
+      stars: (user.stars || 0) - gift.price
+    };
+    setUser(updatedUser);
+
+    // Add gift to recipient's received gifts
+    const updatedContacts = contacts.map(c => {
+      if (c.id === selectedChat.id) {
+        const receivedGifts = c.receivedGifts || [];
+        return {
+          ...c,
+          receivedGifts: [
+            ...receivedGifts,
+            {
+              id: `gift-${Date.now()}`,
+              gift: gift,
+              from: {
+                id: user.id,
+                name: user.name,
+                avatar: user.avatar
+              },
+              timestamp: new Date().toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            }
+          ]
+        };
+      }
+      return c;
+    });
+    setContacts(updatedContacts);
+
+    // Add gift message to chat
+    const currentMessages = allMessages[selectedChat.id] || [];
+    const giftMessage = {
+      id: `msg-${Date.now()}`,
+      senderId: user.id,
+      type: 'gift',
+      gift: gift,
+      recipient: {
+        id: selectedChat.id,
+        name: selectedChat.name,
+        avatar: selectedChat.avatar
+      },
+      timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      status: 'sent'
+    };
+    
+    updateMessagesForChat(selectedChat.id, [...currentMessages, giftMessage]);
+  };
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
