@@ -447,37 +447,46 @@ const ChatApp = () => {
 
   const handleSendGift = (gift) => {
     // Deduct stars from user
-    const updatedUser = {
+    const giftData = {
+      id: `gift-${Date.now()}`,
+      gift: gift,
+      from: {
+        id: user.id,
+        name: user.name,
+        avatar: user.avatar
+      },
+      timestamp: new Date().toLocaleString('ru-RU', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    };
+
+    let updatedUser = {
       ...user,
       stars: (user.stars || 0) - gift.price
     };
+
+    // If gifting to self, update user's receivedGifts
+    if (selectedChat.id === user.id) {
+      const receivedGifts = user.receivedGifts || [];
+      updatedUser = {
+        ...updatedUser,
+        receivedGifts: [...receivedGifts, giftData]
+      };
+    }
+    
     setUser(updatedUser);
 
-    // Add gift to recipient's received gifts
+    // Add gift to recipient's received gifts (for contacts)
     const updatedContacts = contacts.map(c => {
       if (c.id === selectedChat.id) {
         const receivedGifts = c.receivedGifts || [];
         return {
           ...c,
-          receivedGifts: [
-            ...receivedGifts,
-            {
-              id: `gift-${Date.now()}`,
-              gift: gift,
-              from: {
-                id: user.id,
-                name: user.name,
-                avatar: user.avatar
-              },
-              timestamp: new Date().toLocaleString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }
-          ]
+          receivedGifts: [...receivedGifts, giftData]
         };
       }
       return c;
