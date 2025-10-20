@@ -362,14 +362,19 @@ const ChatApp = () => {
         } else {
           response = commands['/unlim'];
         }
-      } else if (commandKey === '/create' && chatId === 'gift-bot') {
+      } else if (commandKey === '/create' && (chatId === 'gift-bot' || chatId === 'debug-bot')) {
         const parts = command.split(' ');
         if (parts.length >= 4) {
           const giftName = parts[1];
           const giftPrice = parseInt(parts[2]);
           const giftImage = parts.slice(3).join(' ');
           
-          if (!isNaN(giftPrice) && giftPrice >= 10 && giftPrice <= 5000) {
+          // Validation
+          if (giftName.length < 2 || giftName.length > 50) {
+            response = '❌ Название должно быть от 2 до 50 символов!';
+          } else if (!isValidImageUrl(giftImage)) {
+            response = '❌ Неверная ссылка на изображение!\n\nИспользуйте валидный URL изображения (PNG, JPG, WebP, GIF, SVG)';
+          } else if (!isNaN(giftPrice) && giftPrice >= 10 && giftPrice <= 5000) {
             const newGift = {
               id: `custom-gift-${Date.now()}`,
               name: giftName,
@@ -382,7 +387,7 @@ const ChatApp = () => {
             };
             
             setCustomGifts([...customGifts, newGift]);
-            response = `✅ Подарок "${giftName}" создан!\n\n💰 Цена: ${giftPrice}★\n👤 Создатель: ${user.name}\n\nТеперь этот подарок доступен для дарения всем пользователям!`;
+            response = `✅ Подарок "${giftName}" создан!\n\n💰 Цена: ${giftPrice}★\n👤 Создатель: ${user.name}\n📅 Дата: ${new Date().toLocaleDateString('ru-RU')}\n\nТеперь этот подарок доступен для дарения всем пользователям!`;
           } else {
             response = '❌ Цена должна быть от 10 до 5000 звёзд!';
           }
