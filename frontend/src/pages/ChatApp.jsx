@@ -775,14 +775,35 @@ const ChatApp = () => {
               >
                 <span className="text-xl">⭐</span>
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="hover:bg-zinc-800"
-                onClick={openEditProfile}
-              >
-                <Settings className="w-5 h-5" />
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="hover:bg-zinc-800"
+                  >
+                    <Settings className="w-5 h-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-56 bg-zinc-900 border-zinc-800">
+                  <div className="space-y-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start hover:bg-zinc-800"
+                      onClick={() => setShowMyProfile(true)}
+                    >
+                      Мой профиль
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start hover:bg-zinc-800"
+                      onClick={openEditProfile}
+                    >
+                      Редактировать профиль
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 
