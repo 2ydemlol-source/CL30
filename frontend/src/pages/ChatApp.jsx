@@ -1976,6 +1976,22 @@ const ChatApp = () => {
         onSendGift={handleSendGift}
         customGifts={customGifts}
       />
+
+      {/* My Profile Modal */}
+      <MyProfileModal
+        isOpen={showMyProfile}
+        onClose={() => setShowMyProfile(false)}
+        user={user}
+        onGiftToSelf={() => {
+          setShowMyProfile(false);
+          setSelectedChat({ ...user, id: user.id });
+          setShowGiftShop(true);
+        }}
+        onEditProfile={() => {
+          setShowMyProfile(false);
+          openEditProfile();
+        }}
+      />
     </div>
   );
 };
