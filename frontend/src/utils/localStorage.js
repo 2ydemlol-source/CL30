@@ -60,3 +60,6 @@ export const getSettings = () => getFromLocalStorage(STORAGE_KEYS.SETTINGS, {});
 
 export const saveCustomCommands = (commands) => saveToLocalStorage('icq_custom_commands', commands);
 export const getCustomCommands = () => getFromLocalStorage('icq_custom_commands', {});
+
+export const saveCustomGifts = (gifts) => saveToLocalStorage('icq_custom_gifts', gifts);
+export const getCustomGifts = () => getFromLocalStorage('icq_custom_gifts', []);
