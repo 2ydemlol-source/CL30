@@ -7,8 +7,41 @@ export const currentUser = {
   status: 'online',
   about: 'Hey there! I am using ICQ New',
   stars: 0,
-  lastDailyReward: null
+  lastDailyReward: null,
+  receivedGifts: []
 };
+
+// Доступные подарки
+export const availableGifts = [
+  {
+    id: 'teddy-bear',
+    name: 'Teddy bear',
+    nameRu: 'Плюшевый мишка',
+    price: 200,
+    image: 'https://case-bot.com/images/cases/pudbsohqxfD98gc.png'
+  },
+  {
+    id: 'scared-cat',
+    name: 'Scared cat',
+    nameRu: 'Испуганный кот',
+    price: 100,
+    image: 'https://case-bot.com/images/cases/PQM9MVSTAF7sQ12.png'
+  },
+  {
+    id: 'lolipop',
+    name: 'Lolipop',
+    nameRu: 'Леденец',
+    price: 50,
+    image: 'https://case-bot.com/images/cases/zFNBfMsaFhboT8P.png'
+  },
+  {
+    id: 'candy-cane',
+    name: 'Candy cane',
+    nameRu: 'Леденец-трость',
+    price: 15,
+    image: 'https://case-bot.com/images/cases/v3nRsNtveR5sjG9.png'
+  }
+];
 
 export const initialContacts = [
   {
