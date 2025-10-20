@@ -332,6 +332,45 @@ const ChatApp = () => {
         } else {
           response = commands['/tell'];
         }
+      } else if (commandKey === '/unlim' && chatId === 'debug-bot') {
+        const amount = parseInt(command.split(' ')[1]);
+        if (!isNaN(amount) && amount > 0) {
+          const updatedUser = {
+            ...user,
+            stars: (user.stars || 0) + amount
+          };
+          setUser(updatedUser);
+          response = `✅ Получено ${amount} звёзд! Новый баланс: ${updatedUser.stars}★`;
+        } else {
+          response = commands['/unlim'];
+        }
+      } else if (commandKey === '/create' && chatId === 'gift-bot') {
+        const parts = command.split(' ');
+        if (parts.length >= 4) {
+          const giftName = parts[1];
+          const giftPrice = parseInt(parts[2]);
+          const giftImage = parts.slice(3).join(' ');
+          
+          if (!isNaN(giftPrice) && giftPrice >= 10 && giftPrice <= 5000) {
+            const newGift = {
+              id: `custom-gift-${Date.now()}`,
+              name: giftName,
+              nameRu: giftName,
+              price: giftPrice,
+              image: giftImage,
+              createdBy: user.name,
+              createdAt: new Date().toISOString(),
+              isCustom: true
+            };
+            
+            setCustomGifts([...customGifts, newGift]);
+            response = `✅ Подарок "${giftName}" создан!\n\n💰 Цена: ${giftPrice}★\n👤 Создатель: ${user.name}\n\nТеперь этот подарок доступен для дарения всем пользователям!`;
+          } else {
+            response = '❌ Цена должна быть от 10 до 5000 звёзд!';
+          }
+        } else {
+          response = commands['/create'];
+        }
       } else {
         response = commands[commandKey] || `Неизвестная команда. Напиши /commands чтобы увидеть доступные команды.`;
       }
