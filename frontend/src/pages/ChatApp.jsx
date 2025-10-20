@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Menu, Image as ImageIcon, Settings, Sun, Moon, Trash2, Bot, Users, Edit2, Save, X, Plus } from 'lucide-react';
-import { initialContacts, initialMessages, currentUser, stickers, botCommands, commonCommands } from '../mockData';
+import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Menu, Image as ImageIcon, Settings, Sun, Moon, Trash2, Bot, Users, Edit2, Save, X, Plus, Gift } from 'lucide-react';
+import { initialContacts, initialMessages, currentUser, stickers, botCommands, commonCommands, availableGifts } from '../mockData';
 import { saveContacts, getContacts, saveMessages, getMessages, saveTheme, getTheme, saveUser, getUser, saveCustomCommands, getCustomCommands } from '../utils/localStorage';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -11,6 +11,8 @@ import { Badge } from '../components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
 import { Label } from '../components/ui/label';
 import { toast } from '../hooks/use-toast';
+import GiftShop from '../components/GiftShop';
+import GiftMessage from '../components/GiftMessage';
 
 const ChatApp = () => {
   // Initialize state from localStorage or defaults
