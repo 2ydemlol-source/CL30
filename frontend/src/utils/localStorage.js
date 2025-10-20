@@ -57,3 +57,6 @@ export const getTheme = () => getFromLocalStorage(STORAGE_KEYS.THEME, 'dark');
 
 export const saveSettings = (settings) => saveToLocalStorage(STORAGE_KEYS.SETTINGS, settings);
 export const getSettings = () => getFromLocalStorage(STORAGE_KEYS.SETTINGS, {});
+
+export const saveCustomCommands = (commands) => saveToLocalStorage('icq_custom_commands', commands);
+export const getCustomCommands = () => getFromLocalStorage('icq_custom_commands', {});
