@@ -181,6 +181,7 @@ export const initialContacts = [
 ];
 
 export const initialMessages = {
+  'favorites': [],
   'demka': [
     {
       id: 'msg-1',
