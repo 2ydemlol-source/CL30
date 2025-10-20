@@ -144,9 +144,17 @@ const ChatApp = () => {
     const updatedContacts = contacts.map(c => {
       if (c.id === chatId && newMessages.length > 0) {
         const lastMsg = newMessages[newMessages.length - 1];
+        let lastMessageText = '';
+        
+        if (lastMsg.type === 'gift') {
+          lastMessageText = `🎁 ${lastMsg.gift.nameRu}`;
+        } else if (lastMsg.content) {
+          lastMessageText = lastMsg.content.substring(0, 50);
+        }
+        
         return {
           ...c,
-          lastMessage: lastMsg.content.substring(0, 50),
+          lastMessage: lastMessageText,
           lastMessageTime: lastMsg.timestamp
         };
       }
