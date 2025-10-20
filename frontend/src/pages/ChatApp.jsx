@@ -68,6 +68,23 @@ const ChatApp = () => {
   const [editForm, setEditForm] = useState({ name: '', avatar: '', about: '', phone: '' });
   const messagesEndRef = useRef(null);
 
+  // Helper function to validate image URL
+  const isValidImageUrl = (url) => {
+    try {
+      const urlObj = new URL(url);
+      const validExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.svg'];
+      const pathname = urlObj.pathname.toLowerCase();
+      return validExtensions.some(ext => pathname.endsWith(ext)) || 
+             pathname.includes('/images/') || 
+             pathname.includes('image') ||
+             url.includes('cdn') ||
+             url.includes('dicebear') ||
+             url.includes('flaticon');
+    } catch {
+      return false;
+    }
+  };
+
   // Background options
   const backgroundOptions = [
     { id: 1, url: 'https://abrakadabra.fun/uploads/posts/2022-03/1646124201_2-abrakadabra-fun-p-temnii-fon-dlya-telegramm-4.jpg', name: 'Тёмный узор' },
