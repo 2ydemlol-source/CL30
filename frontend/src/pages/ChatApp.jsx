@@ -1952,6 +1952,7 @@ const ChatApp = () => {
         recipient={selectedChat}
         userStars={user.stars || 0}
         onSendGift={handleSendGift}
+        customGifts={customGifts}
       />
     </div>
   );
