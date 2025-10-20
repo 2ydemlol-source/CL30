@@ -5,9 +5,12 @@ import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { toast } from '../hooks/use-toast';
 
-const GiftShop = ({ isOpen, onClose, recipient, userStars, onSendGift }) => {
+const GiftShop = ({ isOpen, onClose, recipient, userStars, onSendGift, customGifts = [] }) => {
   const [selectedGift, setSelectedGift] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
+
+  // Combine standard and custom gifts
+  const allGifts = [...availableGifts, ...customGifts];
 
   const handleGiftSelect = (gift) => {
     setSelectedGift(gift);
