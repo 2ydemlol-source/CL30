@@ -895,22 +895,32 @@ const ChatApp = () => {
           <div className={`absolute inset-0 ${customBackground !== 'none' ? 'bg-zinc-900/70 backdrop-blur-[1px]' : ''}`}></div>
           <div className="space-y-4 max-w-4xl mx-auto relative z-10">
             {chatMessages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.senderId === user.id ? 'justify-end' : 'justify-start'}`}
-              >
-                <div
-                  className={`max-w-md ${
-                    message.senderId === user.id
-                      ? 'bg-[#2fa34e] text-white rounded-l-2xl rounded-tr-2xl'
-                      : 'bg-zinc-800 text-white rounded-r-2xl rounded-tl-2xl'
-                  } px-4 py-2 shadow-lg`}
-                >
-                  {message.type === 'text' && (
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
-                  )}
-                  <span className="text-xs opacity-70 mt-1 block">{message.timestamp}</span>
-                </div>
+              <div key={message.id}>
+                {message.type === 'gift' ? (
+                  <GiftMessage
+                    gift={message.gift}
+                    sender={user}
+                    recipient={message.recipient}
+                    isReceived={message.senderId !== user.id}
+                  />
+                ) : (
+                  <div
+                    className={`flex ${message.senderId === user.id ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div
+                      className={`max-w-md ${
+                        message.senderId === user.id
+                          ? 'bg-[#2fa34e] text-white rounded-l-2xl rounded-tr-2xl'
+                          : 'bg-zinc-800 text-white rounded-r-2xl rounded-tl-2xl'
+                      } px-4 py-2 shadow-lg`}
+                    >
+                      {message.type === 'text' && (
+                        <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                      )}
+                      <span className="text-xs opacity-70 mt-1 block">{message.timestamp}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
             <div ref={messagesEndRef} />
