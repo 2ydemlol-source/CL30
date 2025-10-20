@@ -165,6 +165,18 @@ export const initialContacts = [
     lastMessage: 'Управляйте своими звёздами!',
     lastMessageTime: '1 мин назад',
     isBot: true
+  },
+  {
+    id: 'gift-bot',
+    name: 'Gift Bot',
+    usernames: ['gift', 'present'],
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=GiftBot&backgroundColor=FF69B4',
+    status: 'online',
+    lastSeen: null,
+    unreadCount: 0,
+    lastMessage: 'Помощник по подаркам и звёздам',
+    lastMessageTime: '30 сек назад',
+    isBot: true
   }
 ];
 
