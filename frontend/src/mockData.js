@@ -413,7 +413,28 @@ export const botCommands = {
   },
   'gift-bot': {
     '/create': 'create_gift',
-    '/commands': 'Доступные команды:\n/create [имя] [цена] [ссылка] - создать свой подарок\n\nПример:\n/create Роза 25 https://example.com/rose.png\n\nМин. цена: 10★, макс. цена: 5000★'
+    '/send': 'send_gift',
+    '/commands': 'Доступные команды:\n/create [имя] [цена] [ссылка] - создать свой подарок\n/send [название] [1-20] - отправить подарок себе\n\nПример:\n/create Роза 25 https://example.com/rose.png\n/send Lolipop 5\n\nМин. цена: 10★, макс. цена: 5000★'
+  },
+  'config-bot': {
+    '/config': 'config_action',
+    '/manual': 'Полное руководство Config Bot:\n\n/config load [шаблон] - загрузить конфиг\n/config save [название] - сохранить конфиг\n\nДоступные шаблоны:\n- GiftBotConfig\n- SimpsonBotConfig\n- DebugBotConfig\n- PeterBotConfig\n- HelperBotConfig',
+    '/commands': 'Доступные команды:\n/config load [шаблон] - загрузить конфиг бота\n/config save [название] - сохранить текущий конфиг\n/manual - показать полное руководство'
+  },
+  'peter-bot': {
+    '/peter': 'Хе-хе-хе! Привет, я Питер! 🍔',
+    '/bird': 'Птица, птица! Бе-бе-бе! 🐦🐔',
+    '/burger': 'Ммм... бургеры! Кто сказал "бургер"? 🍔',
+    '/beer': 'Пиво Duff - лучшее пиво в Куахоге! 🍺',
+    '/family': 'Моя семья: Лоис, Крис, Мег и Стьюи! 👨‍👩‍👧‍👦',
+    '/joke': 'Знаешь, почему я смешной? Потому что я Питер Гриффин! Хе-хе-хе! 😄',
+    '/dance': 'Смотри как я танцую! 💃 *делает нелепые движения*',
+    '/fight': 'Чик-чирик, птица! 👊 *дерется с гигантским цыпленком*',
+    '/chicken': 'Бе-бе-бе! Цыпленок! 🐔 *начинается эпичная битва*',
+    '/quagmire': 'Гигиги! 👌 Привет, соседи!',
+    '/stewie': 'Проклятье вас, противный человек! 👶',
+    '/lois': 'Лоис, дорогая! Где мое пиво? ❤️',
+    '/commands': 'Мои команды:\n/peter /bird /burger /beer\n/family /joke /dance /fight\n/chicken /quagmire /stewie /lois'
   }
 };
 
