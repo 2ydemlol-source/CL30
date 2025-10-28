@@ -8,7 +8,9 @@ export const currentUser = {
   about: 'Hey there! I am using ICQ New',
   stars: 0,
   lastDailyReward: null,
-  receivedGifts: []
+  receivedGifts: [],
+  verification: null,
+  keywords: {}
 };
 
 // Доступные подарки с тиражами
