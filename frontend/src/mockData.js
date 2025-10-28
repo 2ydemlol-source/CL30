@@ -16,6 +16,16 @@ export const currentUser = {
 // Доступные подарки с тиражами
 export const availableGifts = [
   {
+    id: 'candy-cane',
+    name: 'Candy Cane',
+    nameRu: 'Леденец-трость',
+    price: 15,
+    image: 'https://case-bot.com/images/cases/v3nRsNtveR5sjG9.png',
+    totalSupply: 100,
+    mintedCount: 0,
+    isRare: true
+  },
+  {
     id: 'lolipop',
     name: 'Lolipop',
     nameRu: 'Леденец',
@@ -23,6 +33,16 @@ export const availableGifts = [
     image: 'https://case-bot.com/images/cases/zFNBfMsaFhboT8P.png',
     totalSupply: 5000,
     mintedCount: 0
+  },
+  {
+    id: 'wine',
+    name: 'Wine',
+    nameRu: 'Вино',
+    price: 50,
+    image: 'https://case-bot.com/images/cases/3aoojXMpDqTqIwQ.png',
+    totalSupply: 100,
+    mintedCount: 0,
+    isRare: true
   },
   {
     id: 'scared-cat',
@@ -44,21 +64,11 @@ export const availableGifts = [
     isLimited: true
   },
   {
-    id: 'wine',
-    name: 'Wine',
-    nameRu: 'Вино',
-    price: 50,
-    image: 'https://cdn-icons-png.flaticon.com/512/2553/2553691.png',
-    totalSupply: 100,
-    mintedCount: 0,
-    isRare: true
-  },
-  {
     id: 'crystal-ball',
     name: 'Crystal Ball',
     nameRu: 'Хрустальный шар',
     price: 555,
-    image: 'https://cdn-icons-png.flaticon.com/512/2913/2913133.png',
+    image: 'https://case-bot.com/images/cases/SP2aKi0WBrY1PGb.png',
     totalSupply: 149,
     mintedCount: 0,
     isCollectible: true
@@ -68,7 +78,7 @@ export const availableGifts = [
     name: 'Diamond Shard',
     nameRu: 'Осколок алмаза',
     price: 1700,
-    image: 'https://cdn-icons-png.flaticon.com/512/3522/3522220.png',
+    image: 'https://case-bot.com/images/cases/5LpaAvBpDfO92BV.png',
     totalSupply: 2013,
     mintedCount: 0,
     isPremium: true
@@ -78,7 +88,7 @@ export const availableGifts = [
     name: 'Plush Pepe',
     nameRu: 'Плюшевый Пепе',
     price: 2000,
-    image: 'https://cdn-icons-png.flaticon.com/512/616/616408.png',
+    image: 'https://case-bot.com/images/cases/bEtAjBRG6dnDDk0.png',
     totalSupply: 2000,
     mintedCount: 0,
     isExclusive: true
@@ -88,7 +98,7 @@ export const availableGifts = [
     name: 'Joy',
     nameRu: 'Радость',
     price: 5000,
-    image: 'https://cdn-icons-png.flaticon.com/512/742/742751.png',
+    image: 'https://lh3.googleusercontent.com/d/1Dtxd7twP5Lq0nTZj8',
     totalSupply: 5,
     mintedCount: 0,
     isLegendary: true
