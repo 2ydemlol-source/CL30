@@ -63,3 +63,14 @@ export const getCustomCommands = () => getFromLocalStorage('icq_custom_commands'
 
 export const saveCustomGifts = (gifts) => saveToLocalStorage('icq_custom_gifts', gifts);
 export const getCustomGifts = () => getFromLocalStorage('icq_custom_gifts', []);
+
+export const saveAppSettings = (settings) => saveToLocalStorage('icq_app_settings', settings);
+export const getAppSettings = () => getFromLocalStorage('icq_app_settings', {
+  showSubscriberEdit: true,
+  showCreateContact: true,
+  useConfigSystem: true,
+  designTheme: 'icq' // 'icq' or 'telegram'
+});
+
+export const saveBotConfigs = (configs) => saveToLocalStorage('icq_bot_configs', configs);
+export const getBotConfigs = () => getFromLocalStorage('icq_bot_configs', {});
