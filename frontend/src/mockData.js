@@ -338,7 +338,27 @@ export const initialMessages = {
     {
       id: 'msg-gift-1',
       senderId: 'gift-bot',
-      content: '🎁 Привет! Я Gift Bot - помощник по подаркам и звёздам!\n\nСтатус: Дарит настроение ✨\n\nКоманды:\n/create [имя] [цена] [ссылка] - создать свой подарок\n\nПример:\n/create Роза 25 https://example.com/rose.png\n\nМин. цена: 10★, макс. цена: 5000★',
+      content: '🎁 Привет! Я Gift Bot - помощник по подаркам и звёздам!\n\nСтатус: Дарит настроение ✨\n\nКоманды:\n/create [имя] [цена] [ссылка] - создать свой подарок\n/send [название] [1-20] - отправить подарок себе\n\nПример:\n/create Роза 25 https://example.com/rose.png\n/send Lolipop 5\n\nМин. цена: 10★, макс. цена: 5000★',
+      timestamp: '9:00 AM',
+      type: 'text',
+      status: 'read'
+    }
+  ],
+  'config-bot': [
+    {
+      id: 'msg-config-1',
+      senderId: 'config-bot',
+      content: '⚙️ Config Bot активирован!\n\nЯ помогу вам клонировать функционал между ботами!\n\nКоманды:\n/config load [шаблон] - загрузить конфиг\n/config save [название] - сохранить конфиг\n/manual - полное руководство\n\nДоступные шаблоны:\n- GiftBotConfig\n- SimpsonBotConfig\n- DebugBotConfig\n- PeterBotConfig\n- HelperBotConfig',
+      timestamp: '9:00 AM',
+      type: 'text',
+      status: 'read'
+    }
+  ],
+  'peter-bot': [
+    {
+      id: 'msg-peter-1',
+      senderId: 'peter-bot',
+      content: 'Хе-хе-хе! Привет! Я Питер Гриффин! 🍔\n\nГотов повеселиться? Вот мои команды:\n/peter - приветствие\n/bird - птица!\n/burger - мммм бургеры\n/beer - пиво!\n/family - моя семейка\n/joke - шутка от Питера\n/dance - танцы!\n/chicken - цыпленок!\n\nИспользуй /commands для полного списка!',
       timestamp: '9:00 AM',
       type: 'text',
       status: 'read'
