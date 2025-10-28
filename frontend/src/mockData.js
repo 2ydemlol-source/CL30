@@ -457,3 +457,67 @@ export const botCommands = {
 export const commonCommands = {
   '/clear': 'Чат очищен! 🧹'
 };
+
+// Предустановленные конфиги ботов
+export const botConfigs = {
+  'GiftBotConfig': {
+    name: 'Gift Bot Config',
+    commands: {
+      '/create': 'create_gift',
+      '/send': 'send_gift',
+      '/commands': 'Доступные команды Gift Bot'
+    },
+    description: 'Функции создания и отправки подарков'
+  },
+  'SimpsonBotConfig': {
+    name: 'Simpson Bot Config',
+    commands: {
+      '/hello': 'D\'oh! Привет!',
+      '/burger': 'Ммм... бургеры! 🍔',
+      '/doh': 'D\'oh! 😵',
+      '/beer': 'Пиво Duff! 🍺',
+      '/donut': 'Ммм... пончики! 🍩'
+    },
+    description: '12 команд в стиле Гомера Симпсона'
+  },
+  'DebugBotConfig': {
+    name: 'Debug Bot Config',
+    commands: {
+      '/addchat': 'Создать чат',
+      '/dark': 'Переключить тему',
+      '/unlim': 'Получить звёзды',
+      '/addverif': 'Добавить верификацию'
+    },
+    description: 'Инструменты отладки и разработки'
+  },
+  'PeterBotConfig': {
+    name: 'Peter Bot Config',  
+    commands: {
+      '/peter': 'Хе-хе-хе! 😄',
+      '/bird': 'Птица! 🐦',
+      '/burger': 'Бургеры! 🍔',
+      '/beer': 'Пиво! 🍺',
+      '/family': 'Моя семья! 👨‍👩‍👧‍👦'
+    },
+    description: 'Юмор Питера Гриффина'
+  },
+  'ConfigBotConfig': {
+    name: 'Config Bot Config',
+    commands: {
+      '/config': 'Управление конфигами',
+      '/manual': 'Руководство',
+      '/commands': 'Список команд'
+    },
+    description: 'Система управления конфигами'
+  },
+  'HelperBotConfig': {
+    name: 'Helper Bot Config',
+    commands: {
+      '/help': 'Помощь',
+      '/profile': 'Профиль',
+      '/stars': 'Звёзды',
+      '/commands': 'Команды'
+    },
+    description: 'Базовые команды помощника'
+  }
+};
