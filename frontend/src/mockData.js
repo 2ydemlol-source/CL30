@@ -11,36 +11,96 @@ export const currentUser = {
   receivedGifts: []
 };
 
-// Доступные подарки
+// Доступные подарки с тиражами
 export const availableGifts = [
   {
-    id: 'teddy-bear',
-    name: 'Teddy bear',
-    nameRu: 'Плюшевый мишка',
-    price: 200,
-    image: 'https://case-bot.com/images/cases/pudbsohqxfD98gc.png'
+    id: 'lolipop',
+    name: 'Lolipop',
+    nameRu: 'Леденец',
+    price: 50,
+    image: 'https://case-bot.com/images/cases/zFNBfMsaFhboT8P.png',
+    totalSupply: 5000,
+    mintedCount: 0
   },
   {
     id: 'scared-cat',
     name: 'Scared cat',
     nameRu: 'Испуганный кот',
     price: 100,
-    image: 'https://case-bot.com/images/cases/PQM9MVSTAF7sQ12.png'
+    image: 'https://case-bot.com/images/cases/PQM9MVSTAF7sQ12.png',
+    totalSupply: 10000,
+    mintedCount: 0
   },
   {
-    id: 'lolipop',
-    name: 'Lolipop',
-    nameRu: 'Леденец',
+    id: 'teddy-bear',
+    name: 'Teddy bear',
+    nameRu: 'Плюшевый мишка',
+    price: 200,
+    image: 'https://case-bot.com/images/cases/pudbsohqxfD98gc.png',
+    totalSupply: 500,
+    mintedCount: 0,
+    isLimited: true
+  },
+  {
+    id: 'wine',
+    name: 'Wine',
+    nameRu: 'Вино',
     price: 50,
-    image: 'https://case-bot.com/images/cases/zFNBfMsaFhboT8P.png'
+    image: 'https://cdn-icons-png.flaticon.com/512/2553/2553691.png',
+    totalSupply: 100,
+    mintedCount: 0,
+    isRare: true
   },
   {
-    id: 'candy-cane',
-    name: 'Candy cane',
-    nameRu: 'Леденец-трость',
-    price: 15,
-    image: 'https://case-bot.com/images/cases/v3nRsNtveR5sjG9.png'
+    id: 'crystal-ball',
+    name: 'Crystal Ball',
+    nameRu: 'Хрустальный шар',
+    price: 555,
+    image: 'https://cdn-icons-png.flaticon.com/512/2913/2913133.png',
+    totalSupply: 149,
+    mintedCount: 0,
+    isCollectible: true
+  },
+  {
+    id: 'diamond-shard',
+    name: 'Diamond Shard',
+    nameRu: 'Осколок алмаза',
+    price: 1700,
+    image: 'https://cdn-icons-png.flaticon.com/512/3522/3522220.png',
+    totalSupply: 2013,
+    mintedCount: 0,
+    isPremium: true
+  },
+  {
+    id: 'plush-pepe',
+    name: 'Plush Pepe',
+    nameRu: 'Плюшевый Пепе',
+    price: 2000,
+    image: 'https://cdn-icons-png.flaticon.com/512/616/616408.png',
+    totalSupply: 2000,
+    mintedCount: 0,
+    isExclusive: true
+  },
+  {
+    id: 'joy',
+    name: 'Joy',
+    nameRu: 'Радость',
+    price: 5000,
+    image: 'https://cdn-icons-png.flaticon.com/512/742/742751.png',
+    totalSupply: 5,
+    mintedCount: 0,
+    isLegendary: true
   }
+];
+
+// NFT градиенты
+export const nftGradients = [
+  { id: 1, name: 'Фиолетово-желтый', gradient: 'linear-gradient(135deg, #f5ed16, #ab158a)' },
+  { id: 2, name: 'Кроваво-черный', gradient: 'linear-gradient(135deg, #a11212, #000000)' },
+  { id: 3, name: 'Розово-синий', gradient: 'linear-gradient(135deg, #1697ba, #bd194d)' },
+  { id: 4, name: 'Зелено-голубой', gradient: 'linear-gradient(135deg, #199fbd, #57bd19)' },
+  { id: 5, name: 'Абсолютно черный', gradient: 'linear-gradient(135deg, #000000, #000000)' },
+  { id: 6, name: 'Зелено-красный', gradient: 'linear-gradient(135deg, #0ccc8c, #de1212)' }
 ];
 
 export const initialContacts = [
