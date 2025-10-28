@@ -237,6 +237,30 @@ export const initialContacts = [
     lastMessage: 'Помощник по подаркам и звёздам',
     lastMessageTime: '30 сек назад',
     isBot: true
+  },
+  {
+    id: 'config-bot',
+    name: 'Config Bot',
+    usernames: ['config', 'constructor'],
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=ConfigBot&backgroundColor=4169E1',
+    status: 'online',
+    lastSeen: null,
+    unreadCount: 0,
+    lastMessage: 'Конструктор ботов готов к работе!',
+    lastMessageTime: '1 мин назад',
+    isBot: true
+  },
+  {
+    id: 'peter-bot',
+    name: 'Peter Bot',
+    usernames: ['peter', 'griffin'],
+    avatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=PeterBot&backgroundColor=FFD700',
+    status: 'online',
+    lastSeen: null,
+    unreadCount: 0,
+    lastMessage: 'Хе-хе-хе! Готов веселиться!',
+    lastMessageTime: '2 мин назад',
+    isBot: true
   }
 ];
 
