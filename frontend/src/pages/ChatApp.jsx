@@ -62,7 +62,10 @@ const ChatApp = () => {
   const [showStarsSettings, setShowStarsSettings] = useState(false);
   const [showGiftShop, setShowGiftShop] = useState(false);
   const [showMyProfile, setShowMyProfile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [customGifts, setCustomGifts] = useState(() => getCustomGifts() || []);
+  const [appSettings, setAppSettings] = useState(() => getAppSettings());
+  const [savedBotConfigs, setSavedBotConfigs] = useState(() => getBotConfigs());
   const [customBackground, setCustomBackground] = useState(() => localStorage.getItem('icq_background') || 'https://abrakadabra.fun/uploads/posts/2022-03/1646124201_2-abrakadabra-fun-p-temnii-fon-dlya-telegramm-4.jpg');
   const [editingContact, setEditingContact] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', avatar: '', about: '', phone: '' });
