@@ -98,7 +98,7 @@ export const availableGifts = [
     name: 'Joy',
     nameRu: 'Радость',
     price: 5000,
-    image: 'https://lh3.googleusercontent.com/d/1Dtxd7twP5Lq0nTZj8',
+    image: 'https://cdn-icons-png.flaticon.com/512/166/166527.png',
     totalSupply: 5,
     mintedCount: 0,
     isLegendary: true
