@@ -397,6 +397,115 @@ const ChatApp = () => {
         } else {
           response = commands['/create'];
         }
+      } else if (commandKey === '/config') {
+        // Система конфигов - работает для всех ботов и контактов
+        const parts = command.split(' ');
+        const action = parts[1];
+        const param = parts.slice(2).join(' ');
+
+        if (action === 'save' && param) {
+          // Сохранение текущего конфига
+          const currentConfig = {
+            name: param,
+            botId: chatId,
+            botName: contact.name,
+            commands: customCommands[chatId] || {},
+            keywords: user.keywords?.[chatId] || {},
+            createdAt: new Date().toISOString()
+          };
+          
+          const updatedConfigs = {
+            ...savedBotConfigs,
+            [param]: currentConfig
+          };
+          setSavedBotConfigs(updatedConfigs);
+          
+          const commandCount = Object.keys(currentConfig.commands).length;
+          const keywordCount = Object.keys(currentConfig.keywords).length;
+          response = `✅ Конфиг "${param}" сохранен!\n\nСохранено:\n• ${commandCount} команд\n• ${keywordCount} ключевых слов\n\nДата создания: ${new Date().toLocaleDateString('ru-RU')}`;
+          
+        } else if (action === 'load' && param) {
+          // Загрузка конфига
+          let configToLoad = null;
+          
+          // Проверяем предустановленные конфиги
+          if (botConfigs[param]) {
+            configToLoad = botConfigs[param];
+            
+            // Применяем команды к текущему боту
+            const updatedCustomCommands = {
+              ...customCommands,
+              [chatId]: {
+                ...(customCommands[chatId] || {}),
+                ...configToLoad.commands
+              }
+            };
+            setCustomCommands(updatedCustomCommands);
+            
+            const commandList = Object.keys(configToLoad.commands)
+              .slice(0, 5)
+              .map(cmd => `• ${cmd}`)
+              .join('\n');
+            
+            const moreCommands = Object.keys(configToLoad.commands).length - 5;
+            response = `✅ Конфиг "${param}" загружен!\n\nТеперь я умею:\n${commandList}${moreCommands > 0 ? `\n... и еще ${moreCommands} команд` : ''}\n\n📝 ${configToLoad.description}`;
+            
+          } else if (savedBotConfigs[param]) {
+            // Загружаем пользовательский конфиг
+            configToLoad = savedBotConfigs[param];
+            
+            const updatedCustomCommands = {
+              ...customCommands,
+              [chatId]: {
+                ...(customCommands[chatId] || {}),
+                ...configToLoad.commands
+              }
+            };
+            setCustomCommands(updatedCustomCommands);
+            
+            response = `✅ Конфиг "${param}" загружен!\n\nКоманд загружено: ${Object.keys(configToLoad.commands).length}\nКлючевых слов: ${Object.keys(configToLoad.keywords || {}).length}`;
+          } else {
+            response = `❌ Конфиг "${param}" не найден!\n\nДоступные предустановленные:\n${Object.keys(botConfigs).join(', ')}\n\nВаши конфиги: ${Object.keys(savedBotConfigs).length > 0 ? Object.keys(savedBotConfigs).join(', ') : 'нет'}`;
+          }
+          
+        } else if (action === 'list') {
+          // Список конфигов
+          const presetList = Object.keys(botConfigs).map(name => `📦 ${name}`).join('\n');
+          const userList = Object.keys(savedBotConfigs).length > 0
+            ? Object.keys(savedBotConfigs).map(name => `💾 ${name}`).join('\n')
+            : 'Нет сохраненных конфигов';
+          
+          response = `📋 Доступные конфиги:\n\n🔧 Предустановленные:\n${presetList}\n\n👤 Ваши конфиги:\n${userList}\n\nИспользуйте: /config load [название]`;
+          
+        } else if (action === 'delete' && param) {
+          // Удаление конфига
+          if (savedBotConfigs[param]) {
+            const updatedConfigs = { ...savedBotConfigs };
+            delete updatedConfigs[param];
+            setSavedBotConfigs(updatedConfigs);
+            response = `✅ Конфиг "${param}" удален!`;
+          } else {
+            response = `❌ Конфиг "${param}" не найден!`;
+          }
+          
+        } else if (action === 'info' && param) {
+          // Информация о конфиге
+          let configInfo = null;
+          
+          if (botConfigs[param]) {
+            configInfo = botConfigs[param];
+            const commandList = Object.keys(configInfo.commands).map(cmd => `• ${cmd}`).join('\n');
+            response = `ℹ️ Информация о конфиге "${param}"\n\n📝 ${configInfo.description}\n\n📋 Команды:\n${commandList}\n\n🏷️ Тип: Предустановленный`;
+          } else if (savedBotConfigs[param]) {
+            configInfo = savedBotConfigs[param];
+            response = `ℹ️ Информация о конфиге "${param}"\n\n🤖 Бот: ${configInfo.botName}\n📋 Команд: ${Object.keys(configInfo.commands).length}\n🔑 Ключевых слов: ${Object.keys(configInfo.keywords || {}).length}\n📅 Создан: ${new Date(configInfo.createdAt).toLocaleDateString('ru-RU')}\n\n🏷️ Тип: Пользовательский`;
+          } else {
+            response = `❌ Конфиг "${param}" не найден!`;
+          }
+          
+        } else {
+          response = `🔧 Система конфигов\n\nИспользование:\n/config save [название] - сохранить текущий конфиг\n/config load [название] - загрузить конфиг\n/config list - показать все конфиги\n/config delete [название] - удалить конфиг\n/config info [название] - информация о конфиге\n\nПример:\n/config load SimpsonBotConfig`;
+        }
       } else {
         response = commands[commandKey] || `Неизвестная команда. Напиши /commands чтобы увидеть доступные команды.`;
       }
