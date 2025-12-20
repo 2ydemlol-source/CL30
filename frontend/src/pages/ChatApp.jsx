@@ -953,6 +953,13 @@ const ChatApp = () => {
                     >
                       Редактировать профиль
                     </Button>
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start hover:bg-zinc-800"
+                      onClick={() => setShowSettings(true)}
+                    >
+                      Настройки
+                    </Button>
                   </div>
                 </PopoverContent>
               </Popover>
