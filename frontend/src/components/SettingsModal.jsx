@@ -255,7 +255,7 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
                         </p>
                       </Label>
                     </div>
-                  </RadioGroup>
+                  </div>
                 </RadioGroup>
               </div>
 
