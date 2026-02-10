@@ -1261,18 +1261,20 @@ const ChatApp = () => {
                   {!editingSubscribers ? (
                     <>
                       <p className="text-sm text-purple-400">{selectedChat.members?.toLocaleString()} подписчиков</p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-xs border-zinc-700 hover:bg-zinc-800"
-                        onClick={() => {
-                          setEditingSubscribers(true);
-                          setTempSubscriberCount(selectedChat.members?.toString() || '0');
-                        }}
-                      >
-                        <Edit2 className="w-3 h-3 mr-1" />
-                        Изменить подписчиков
-                      </Button>
+                      {appSettings.showSubscriberEdit && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-xs border-zinc-700 hover:bg-zinc-800"
+                          onClick={() => {
+                            setEditingSubscribers(true);
+                            setTempSubscriberCount(selectedChat.members?.toString() || '0');
+                          }}
+                        >
+                          <Edit2 className="w-3 h-3 mr-1" />
+                          Изменить подписчиков
+                        </Button>
+                      )}
                     </>
                   ) : (
                     <div className="flex gap-2 items-center">
