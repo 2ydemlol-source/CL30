@@ -1160,8 +1160,8 @@ const ChatApp = () => {
                     <div
                       className={`max-w-md ${
                         message.senderId === user.id
-                          ? 'bg-[#2fa34e] text-white rounded-l-2xl rounded-tr-2xl'
-                          : 'bg-zinc-800 text-white rounded-r-2xl rounded-tl-2xl'
+                          ? `${appSettings.designTheme === 'telegram' ? 'bg-blue-600' : 'bg-[#2fa34e]'} text-white ${appSettings.designTheme === 'telegram' ? 'rounded-[20px]' : 'rounded-l-2xl rounded-tr-2xl'}`
+                          : `bg-zinc-800 text-white ${appSettings.designTheme === 'telegram' ? 'rounded-[20px]' : 'rounded-r-2xl rounded-tl-2xl'}`
                       } px-4 py-2 shadow-lg`}
                     >
                       {message.type === 'text' && (
