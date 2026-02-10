@@ -2151,6 +2151,29 @@ const ChatApp = () => {
           openEditProfile();
         }}
       />
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        appSettings={appSettings}
+        onSaveSettings={(newSettings) => {
+          setAppSettings(newSettings);
+          toast({ 
+            title: 'Настройки сохранены', 
+            description: 'Изменения применены успешно' 
+          });
+        }}
+        user={user}
+        onOpenProfile={() => {
+          setShowSettings(false);
+          setShowMyProfile(true);
+        }}
+        onOpenStars={() => {
+          setShowSettings(false);
+          setShowStarsSettings(true);
+        }}
+      />
     </div>
   );
 };
