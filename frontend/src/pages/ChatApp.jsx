@@ -1038,16 +1038,18 @@ const ChatApp = () => {
           </div>
         </ScrollArea>
 
-        {/* Plus Button at Bottom */}
-        <div className="p-4 border-t border-zinc-800">
-          <Button
-            onClick={() => setShowCreateContact(true)}
-            className="w-full bg-[#2fa34e] hover:bg-[#258a3c] text-white flex items-center justify-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Создать контакт
-          </Button>
-        </div>
+        {/* Create Contact Button - conditional */}
+        {appSettings.showCreateContact && (
+          <div className="p-4 border-t border-zinc-800">
+            <Button
+              onClick={() => setShowCreateContact(true)}
+              className="w-full bg-[#2fa34e] hover:bg-[#258a3c] text-white flex items-center justify-center gap-2"
+            >
+              <Plus className="w-5 h-5" />
+              Создать контакт
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Main Chat Area */}
