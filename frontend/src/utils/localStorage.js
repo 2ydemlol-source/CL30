@@ -74,3 +74,17 @@ export const getAppSettings = () => getFromLocalStorage('icq_app_settings', {
 
 export const saveBotConfigs = (configs) => saveToLocalStorage('icq_bot_configs', configs);
 export const getBotConfigs = () => getFromLocalStorage('icq_bot_configs', {});
+
+// Admin system
+export const saveAdminStatus = (isAdmin) => saveToLocalStorage('cl_admin_status', isAdmin);
+export const getAdminStatus = () => getFromLocalStorage('cl_admin_status', false);
+
+// Registration logs
+export const saveRegistrationLogs = (logs) => saveToLocalStorage('cl_registration_logs', logs);
+export const getRegistrationLogs = () => getFromLocalStorage('cl_registration_logs', []);
+export const addRegistrationLog = (log) => {
+  const logs = getRegistrationLogs();
+  logs.push(log);
+  saveRegistrationLogs(logs);
+  return logs;
+};
