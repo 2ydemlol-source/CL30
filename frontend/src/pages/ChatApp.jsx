@@ -2304,6 +2304,21 @@ const ChatApp = () => {
             const updatedLogs = addRegistrationLog(newLog);
             setRegistrationLogs(updatedLogs);
             
+            // Add to registered users for search
+            const newRegisteredUser = {
+              username: userData.username,
+              name: userData.username,
+              avatar: updatedUser.avatar,
+              registeredAt: new Date().toISOString()
+            };
+            const updatedUsers = addRegisteredUser(newRegisteredUser);
+            setRegisteredUsers(updatedUsers);
+            
+            // Add to online users
+            const updatedOnline = [...onlineUsers, newRegisteredUser];
+            setOnlineUsers(updatedOnline);
+            saveOnlineUsers(updatedOnline);
+            
             // Auto-subscribe to Fun Channel
             const funChannelExists = contacts.find(c => c.id === 'fun-channel');
             if (funChannelExists && !contacts.find(c => c.id === 'fun-channel' && c.isSubscribed)) {
