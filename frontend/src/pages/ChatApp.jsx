@@ -1217,6 +1217,39 @@ const ChatApp = () => {
                 </div>
               </div>
             ))}
+            
+            {/* Show registered users in search */}
+            {searchQuery && searchableUsers.length > 0 && (
+              <>
+                <div className="px-3 py-2 mt-2 border-t border-zinc-800">
+                  <p className="text-xs text-zinc-500 font-medium">Найденные пользователи</p>
+                </div>
+                {searchableUsers.map((searchedUser) => (
+                  <div
+                    key={searchedUser.username}
+                    onClick={() => startChatWithUser(searchedUser)}
+                    className="flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all hover:bg-zinc-800 bg-zinc-900/50"
+                  >
+                    <Avatar className="w-12 h-12">
+                      <AvatarImage src={searchedUser.avatar} />
+                      <AvatarFallback>{searchedUser.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium truncate">{searchedUser.name}</h3>
+                        <Badge variant="outline" className="text-xs bg-blue-900/30 border-blue-700 text-blue-300">
+                          Пользователь
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-[#2fa34e]">@{searchedUser.username}</p>
+                    </div>
+                    <Button size="sm" variant="ghost" className="text-[#2fa34e]">
+                      Чат
+                    </Button>
+                  </div>
+                ))}
+              </>
+            )}
           </div>
         </ScrollArea>
 
