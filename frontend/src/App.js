@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ChatApp from './pages/ChatApp';
+import RealChat from './pages/RealChat';
 import { Toaster } from './components/ui/toaster';
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ChatApp />} />
+          <Route path="/real" element={<RealChat />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
