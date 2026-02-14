@@ -74,7 +74,30 @@ const ChatApp = () => {
   const [customBackground, setCustomBackground] = useState(() => localStorage.getItem('icq_background') || 'https://abrakadabra.fun/uploads/posts/2022-03/1646124201_2-abrakadabra-fun-p-temnii-fon-dlya-telegramm-4.jpg');
   const [editingContact, setEditingContact] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', avatar: '', about: '', phone: '' });
+  const [isAdmin, setIsAdmin] = useState(() => getAdminStatus());
+  const [registrationLogs, setRegistrationLogs] = useState(() => getRegistrationLogs());
   const messagesEndRef = useRef(null);
+
+  // Admin functions
+  const handleAdminLogin = () => {
+    setIsAdmin(true);
+    saveAdminStatus(true);
+    toast({ title: '🔓 Режим администратора', description: 'Все функции разблокированы!' });
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdmin(false);
+    saveAdminStatus(false);
+    toast({ title: '🔒 Выход из админ-режима', description: 'Административные функции отключены' });
+  };
+
+  // Limits for regular users
+  const MAX_USER_CHANNELS = 5;
+  const MAX_USER_BOTS = 5;
+
+  // Count user-created bots and channels
+  const userCreatedBots = contacts.filter(c => c.isBot && c.id.startsWith('user-')).length;
+  const userCreatedChannels = contacts.filter(c => c.isChannel && c.id.startsWith('user-')).length;
 
   // Helper function to validate image URL
   const isValidImageUrl = (url) => {
