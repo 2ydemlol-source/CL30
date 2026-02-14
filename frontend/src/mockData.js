@@ -237,7 +237,8 @@ export const initialContacts = [
     unreadCount: 0,
     lastMessage: 'Управляйте своими звёздами!',
     lastMessageTime: '1 мин назад',
-    isBot: true
+    isBot: true,
+    adminOnly: true
   },
   {
     id: 'gift-bot',
