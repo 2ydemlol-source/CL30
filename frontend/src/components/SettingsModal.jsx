@@ -274,12 +274,14 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
             <div className="space-y-4 p-4">
               <div className="bg-zinc-800 rounded-lg p-6 text-center">
                 <div className="w-20 h-20 bg-[#2fa34e] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <svg viewBox="0 0 24 24" className="w-12 h-12 text-white" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
+                  <img 
+                    src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+                    alt="CL Logo" 
+                    className="w-16 h-16 rounded-xl"
+                  />
                 </div>
-                <h2 className="text-2xl font-bold mb-2">ICQ New Messenger</h2>
-                <p className="text-zinc-400 mb-4">Версия 2.0 - "Персональные боты и коллекции"</p>
+                <h2 className="text-2xl font-bold mb-2">CL Messenger</h2>
+                <p className="text-zinc-400 mb-4">Версия 3.0 - "Открытие серверов"</p>
               </div>
 
               <div className="bg-zinc-800 rounded-lg p-4">
