@@ -1501,7 +1501,12 @@ const ChatApp = () => {
             </div>
             
             <div className="space-y-2">
-              <Label>Выберите аватар из галереи</Label>
+              <div className="flex items-center justify-between">
+                <Label>Выберите аватар из галереи</Label>
+                {!isAdmin && (
+                  <span className="text-xs text-yellow-500">Только из галереи</span>
+                )}
+              </div>
               <ScrollArea className="h-48 border border-zinc-700 rounded-lg p-2">
                 <div className="grid grid-cols-6 gap-2">
                   {presetAvatars.map((avatarUrl, index) => (
@@ -1519,15 +1524,19 @@ const ChatApp = () => {
               </ScrollArea>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="profile-avatar">Или введите URL аватара</Label>
-              <Input
-                id="profile-avatar"
-                value={editForm.avatar}
-                onChange={(e) => setEditForm({ ...editForm, avatar: e.target.value })}
-                placeholder="https://example.com/avatar.png"
-                className="bg-zinc-800 border-zinc-700"
-              />
+            {/* URL avatar input - admin only */}
+            {isAdmin && (
+              <div className="space-y-2">
+                <Label htmlFor="profile-avatar">Или введите URL аватара (только для админов)</Label>
+                <Input
+                  id="profile-avatar"
+                  value={editForm.avatar}
+                  onChange={(e) => setEditForm({ ...editForm, avatar: e.target.value })}
+                  placeholder="https://example.com/avatar.png"
+                  className="bg-zinc-800 border-zinc-700"
+                />
+              </div>
+            )}
             </div>
 
             <div className="space-y-2">
