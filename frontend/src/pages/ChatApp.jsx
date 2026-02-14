@@ -1537,7 +1537,6 @@ const ChatApp = () => {
                 />
               </div>
             )}
-            </div>
 
             <div className="space-y-2">
               <Label htmlFor="profile-phone">Номер телефона</Label>
