@@ -65,6 +65,9 @@ const ChatApp = () => {
   const [showGiftShop, setShowGiftShop] = useState(false);
   const [showMyProfile, setShowMyProfile] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showRegistration, setShowRegistration] = useState(() => {
+    return !localStorage.getItem('cl_user_registered');
+  });
   const [customGifts, setCustomGifts] = useState(() => getCustomGifts() || []);
   const [appSettings, setAppSettings] = useState(() => getAppSettings());
   const [savedBotConfigs, setSavedBotConfigs] = useState(() => getBotConfigs());
