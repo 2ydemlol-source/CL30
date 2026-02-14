@@ -1255,13 +1255,21 @@ const ChatApp = () => {
 
         {/* Create Contact Button - conditional */}
         {appSettings.showCreateContact && (
-          <div className="p-4 border-t border-zinc-800">
+          <div className="p-4 border-t border-zinc-800 space-y-2">
             <Button
               onClick={() => setShowCreateContact(true)}
               className="w-full bg-[#2fa34e] hover:bg-[#258a3c] text-white flex items-center justify-center gap-2"
             >
               <Plus className="w-5 h-5" />
               Создать контакт
+            </Button>
+            <Button
+              onClick={() => setShowCreateGroup(true)}
+              variant="outline"
+              className="w-full border-zinc-700 hover:bg-zinc-800 flex items-center justify-center gap-2"
+            >
+              <Users className="w-5 h-5" />
+              Создать группу
             </Button>
           </div>
         )}
