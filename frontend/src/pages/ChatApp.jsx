@@ -2274,6 +2274,148 @@ const ChatApp = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Create Group Modal */}
+      <Dialog open={showCreateGroup} onOpenChange={setShowCreateGroup}>
+        <DialogContent className="bg-zinc-900 border-zinc-800 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Создать группу</DialogTitle>
+            <DialogDescription className="text-zinc-400">
+              Создайте групповой чат и добавьте участников
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="group-name">Название группы *</Label>
+              <Input
+                id="group-name"
+                value={newGroupForm.name}
+                onChange={(e) => setNewGroupForm({ ...newGroupForm, name: e.target.value })}
+                placeholder="Введите название"
+                className="bg-zinc-800 border-zinc-700"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="group-username">Юзернейм группы *</Label>
+              <Input
+                id="group-username"
+                value={newGroupForm.username}
+                onChange={(e) => setNewGroupForm({ ...newGroupForm, username: e.target.value.toLowerCase().replace(/\s/g, '') })}
+                placeholder="@groupname (мин. 4 символа)"
+                className="bg-zinc-800 border-zinc-700"
+                maxLength={20}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Аватар группы</Label>
+              <ScrollArea className="h-32 border border-zinc-700 rounded-lg p-2">
+                <div className="grid grid-cols-6 gap-2">
+                  {presetAvatars.slice(0, 12).map((avatarUrl, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setNewGroupForm({ ...newGroupForm, avatar: avatarUrl })}
+                      className={`relative rounded-lg overflow-hidden hover:ring-2 hover:ring-[#2fa34e] transition-all ${
+                        newGroupForm.avatar === avatarUrl ? 'ring-2 ring-[#2fa34e]' : ''
+                      }`}
+                    >
+                      <img src={avatarUrl} alt={`Avatar ${index + 1}`} className="w-full h-full object-cover aspect-square" />
+                    </button>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Добавить участников</Label>
+              <Input
+                value={userSearchQuery}
+                onChange={(e) => setUserSearchQuery(e.target.value)}
+                placeholder="Поиск по юзернейму..."
+                className="bg-zinc-800 border-zinc-700"
+              />
+              
+              {/* Search results */}
+              {userSearchQuery && (
+                <ScrollArea className="h-32 border border-zinc-700 rounded-lg">
+                  {registeredUsers
+                    .filter(u => 
+                      u.username.toLowerCase().includes(userSearchQuery.toLowerCase()) &&
+                      !newGroupForm.members.includes(u.username)
+                    )
+                    .map((u) => (
+                      <div
+                        key={u.username}
+                        className="flex items-center justify-between p-2 hover:bg-zinc-800 cursor-pointer"
+                        onClick={() => {
+                          addMemberToGroup(u.username);
+                          setUserSearchQuery('');
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <Avatar className="w-8 h-8">
+                            <AvatarImage src={u.avatar} />
+                            <AvatarFallback>{u.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <span>@{u.username}</span>
+                        </div>
+                        <Plus className="w-4 h-4 text-[#2fa34e]" />
+                      </div>
+                    ))
+                  }
+                  {registeredUsers.filter(u => 
+                    u.username.toLowerCase().includes(userSearchQuery.toLowerCase()) &&
+                    !newGroupForm.members.includes(u.username)
+                  ).length === 0 && (
+                    <div className="p-4 text-center text-zinc-500">
+                      Пользователи не найдены
+                    </div>
+                  )}
+                </ScrollArea>
+              )}
+
+              {/* Selected members */}
+              {newGroupForm.members.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {newGroupForm.members.map((member) => (
+                    <Badge
+                      key={member}
+                      variant="secondary"
+                      className="bg-[#2fa34e]/20 text-[#2fa34e] border-[#2fa34e] cursor-pointer"
+                      onClick={() => removeMemberFromGroup(member)}
+                    >
+                      @{member}
+                      <X className="w-3 h-3 ml-1" />
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowCreateGroup(false);
+                setNewGroupForm({ name: '', username: '', avatar: '', members: [] });
+                setUserSearchQuery('');
+              }}
+              className="hover:bg-zinc-800"
+            >
+              Отмена
+            </Button>
+            <Button
+              onClick={createNewGroup}
+              className="bg-[#2fa34e] hover:bg-[#258a3c]"
+              disabled={!newGroupForm.name || !newGroupForm.username || newGroupForm.username.length < 4}
+            >
+              <Users className="w-4 h-4 mr-2" />
+              Создать группу
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Gift Shop Modal */}
       <GiftShop
         isOpen={showGiftShop}
