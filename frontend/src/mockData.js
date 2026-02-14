@@ -224,7 +224,8 @@ export const initialContacts = [
     unreadCount: 0,
     lastMessage: 'Готов к командам!',
     lastMessageTime: '3 мин назад',
-    isBot: true
+    isBot: true,
+    adminOnly: true
   },
   {
     id: 'stars-bot',

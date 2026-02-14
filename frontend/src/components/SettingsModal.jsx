@@ -1,15 +1,73 @@
 import React, { useState } from 'react';
-import { X, Star, Gift, Settings as SettingsIcon, Info, User } from 'lucide-react';
+import { X, Star, Gift, Settings as SettingsIcon, Info, User, Terminal, Shield, ShieldCheck } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Input } from './ui/input';
+import { ScrollArea } from './ui/scroll-area';
 import { toast } from '../hooks/use-toast';
 
-const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onOpenProfile, onOpenStars }) => {
+const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onOpenProfile, onOpenStars, isAdmin, onAdminLogin, onAdminLogout, registrationLogs }) => {
   const [settings, setSettings] = useState(appSettings);
+  const [consoleInput, setConsoleInput] = useState('');
+  const [consoleOutput, setConsoleOutput] = useState([
+    { type: 'system', text: 'CL Console v1.0 - Добро пожаловать!' },
+    { type: 'system', text: 'Введите /help для списка команд' }
+  ]);
+
+  const handleConsoleCommand = () => {
+    if (!consoleInput.trim()) return;
+    
+    const cmd = consoleInput.trim();
+    const newOutput = [...consoleOutput, { type: 'input', text: `> ${cmd}` }];
+    
+    if (cmd === '/help') {
+      newOutput.push({ type: 'output', text: 'Доступные команды:\n/login [код] - войти как администратор\n/logout - выйти из админ-режима\n/status - проверить статус\n/logs - просмотр логов (только для админов)\n/clear - очистить консоль' });
+    } else if (cmd.startsWith('/login ')) {
+      const code = cmd.split(' ')[1];
+      if (code === 'hhsqs000091demyan_icqToCLxd') {
+        onAdminLogin();
+        newOutput.push({ type: 'success', text: '✅ Успешный вход! Вы теперь администратор.' });
+        newOutput.push({ type: 'system', text: 'Доступны административные функции и боты.' });
+      } else {
+        newOutput.push({ type: 'error', text: '❌ Неверный код доступа!' });
+      }
+    } else if (cmd === '/logout') {
+      if (isAdmin) {
+        onAdminLogout();
+        newOutput.push({ type: 'success', text: '✅ Вы вышли из режима администратора.' });
+      } else {
+        newOutput.push({ type: 'error', text: '❌ Вы не авторизованы как администратор.' });
+      }
+    } else if (cmd === '/status') {
+      newOutput.push({ type: 'output', text: `Статус: ${isAdmin ? '🔓 Администратор' : '🔒 Обычный пользователь'}\nПользователь: ${user.name}\nЗвёзды: ${user.stars || 0}★` });
+    } else if (cmd === '/logs') {
+      if (isAdmin) {
+        if (registrationLogs && registrationLogs.length > 0) {
+          const logsText = registrationLogs.slice(-10).map(log => 
+            `[${log.date}] ${log.username} - ${log.name}`
+          ).join('\n');
+          newOutput.push({ type: 'output', text: `📋 Последние регистрации:\n${logsText}` });
+        } else {
+          newOutput.push({ type: 'output', text: '📋 Логи регистраций пусты.' });
+        }
+      } else {
+        newOutput.push({ type: 'error', text: '❌ Доступ запрещён. Требуются права администратора.' });
+      }
+    } else if (cmd === '/clear') {
+      setConsoleOutput([{ type: 'system', text: 'Консоль очищена.' }]);
+      setConsoleInput('');
+      return;
+    } else {
+      newOutput.push({ type: 'error', text: `❌ Неизвестная команда: ${cmd}` });
+    }
+    
+    setConsoleOutput(newOutput);
+    setConsoleInput('');
+  };
 
   const handleToggle = (key) => {
     setSettings({
@@ -41,7 +99,7 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
         </DialogHeader>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-zinc-800">
+          <TabsList className="grid w-full grid-cols-6 bg-zinc-800">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="w-4 h-4" />
               Профиль
@@ -58,9 +116,13 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
               <SettingsIcon className="w-4 h-4" />
               Параметры
             </TabsTrigger>
+            <TabsTrigger value="console" className="flex items-center gap-2">
+              <Terminal className="w-4 h-4" />
+              Консоль
+            </TabsTrigger>
             <TabsTrigger value="about" className="flex items-center gap-2">
               <Info className="w-4 h-4" />
-              О программе
+              О CL
             </TabsTrigger>
           </TabsList>
 
@@ -266,6 +328,90 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
               >
                 Сохранить настройки
               </Button>
+            </div>
+          </TabsContent>
+
+          {/* Консоль */}
+          <TabsContent value="console" className="mt-4">
+            <div className="space-y-4 p-4">
+              {/* Статус администратора */}
+              <div className={`flex items-center justify-between p-4 rounded-lg ${isAdmin ? 'bg-green-900/30 border border-green-700' : 'bg-zinc-800'}`}>
+                <div className="flex items-center gap-3">
+                  {isAdmin ? (
+                    <ShieldCheck className="w-8 h-8 text-green-500" />
+                  ) : (
+                    <Shield className="w-8 h-8 text-zinc-500" />
+                  )}
+                  <div>
+                    <h3 className="font-semibold text-lg">
+                      {isAdmin ? 'Режим администратора' : 'Обычный пользователь'}
+                    </h3>
+                    <p className="text-sm text-zinc-400">
+                      {isAdmin ? 'Все функции доступны' : 'Ограниченный доступ'}
+                    </p>
+                  </div>
+                </div>
+                {isAdmin && (
+                  <Button 
+                    onClick={onAdminLogout} 
+                    variant="outline" 
+                    className="border-red-700 text-red-400 hover:bg-red-900/30"
+                  >
+                    Выйти
+                  </Button>
+                )}
+              </div>
+
+              {/* Консоль */}
+              <div className="bg-zinc-950 rounded-lg border border-zinc-800 overflow-hidden">
+                <div className="bg-zinc-900 px-4 py-2 border-b border-zinc-800 flex items-center gap-2">
+                  <Terminal className="w-4 h-4 text-green-500" />
+                  <span className="text-sm font-mono text-zinc-400">CL Console</span>
+                </div>
+                <ScrollArea className="h-64 p-4 font-mono text-sm">
+                  {consoleOutput.map((line, idx) => (
+                    <div key={idx} className={`mb-1 ${
+                      line.type === 'input' ? 'text-blue-400' :
+                      line.type === 'output' ? 'text-zinc-300 whitespace-pre-wrap' :
+                      line.type === 'success' ? 'text-green-400' :
+                      line.type === 'error' ? 'text-red-400' :
+                      'text-zinc-500'
+                    }`}>
+                      {line.text}
+                    </div>
+                  ))}
+                </ScrollArea>
+                <div className="border-t border-zinc-800 p-2 flex gap-2">
+                  <span className="text-green-500 font-mono">{'>'}</span>
+                  <Input
+                    value={consoleInput}
+                    onChange={(e) => setConsoleInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleConsoleCommand()}
+                    placeholder="Введите команду..."
+                    className="flex-1 bg-transparent border-none focus-visible:ring-0 font-mono text-sm h-8 p-0"
+                  />
+                  <Button 
+                    onClick={handleConsoleCommand}
+                    size="sm"
+                    className="bg-green-700 hover:bg-green-600 h-8"
+                  >
+                    Enter
+                  </Button>
+                </div>
+              </div>
+
+              {/* Подсказки */}
+              <div className="bg-zinc-800 rounded-lg p-4">
+                <h4 className="font-semibold mb-2 text-sm">Доступные команды:</h4>
+                <div className="grid grid-cols-2 gap-2 text-xs font-mono text-zinc-400">
+                  <div>/help - справка</div>
+                  <div>/status - статус</div>
+                  <div>/login [код] - вход</div>
+                  <div>/logout - выход</div>
+                  <div>/logs - логи (админ)</div>
+                  <div>/clear - очистить</div>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
