@@ -5,7 +5,7 @@ export const currentUser = {
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
   phone: '+1 234 567 8900',
   status: 'online',
-  about: 'Hey there! I am using ICQ New',
+  about: 'Hey there! I am using CL Messenger',
   stars: 0,
   lastDailyReward: null,
   receivedGifts: [],
