@@ -248,7 +248,8 @@ export const initialContacts = [
     unreadCount: 0,
     lastMessage: 'Помощник по подаркам и звёздам',
     lastMessageTime: '30 сек назад',
-    isBot: true
+    isBot: true,
+    adminOnly: true
   },
   {
     id: 'config-bot',
@@ -260,7 +261,8 @@ export const initialContacts = [
     unreadCount: 0,
     lastMessage: 'Конструктор ботов готов к работе!',
     lastMessageTime: '1 мин назад',
-    isBot: true
+    isBot: true,
+    adminOnly: true
   },
   {
     id: 'peter-bot',
