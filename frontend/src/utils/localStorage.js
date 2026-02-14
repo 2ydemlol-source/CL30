@@ -88,3 +88,20 @@ export const addRegistrationLog = (log) => {
   saveRegistrationLogs(logs);
   return logs;
 };
+
+// Online users tracking
+export const saveOnlineUsers = (users) => saveToLocalStorage('cl_online_users', users);
+export const getOnlineUsers = () => getFromLocalStorage('cl_online_users', []);
+
+// Registered users for search
+export const saveRegisteredUsers = (users) => saveToLocalStorage('cl_registered_users', users);
+export const getRegisteredUsers = () => getFromLocalStorage('cl_registered_users', []);
+export const addRegisteredUser = (user) => {
+  const users = getRegisteredUsers();
+  // Avoid duplicates
+  if (!users.find(u => u.username === user.username)) {
+    users.push(user);
+    saveRegisteredUsers(users);
+  }
+  return users;
+};
