@@ -15,6 +15,7 @@ import GiftShop from '../components/GiftShop';
 import GiftMessage from '../components/GiftMessage';
 import MyProfileModal from '../components/MyProfileModal';
 import SettingsModal from '../components/SettingsModal';
+import RegistrationModal from '../components/RegistrationModal';
 
 const ChatApp = () => {
   // Initialize state from localStorage or defaults
