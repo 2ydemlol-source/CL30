@@ -2276,6 +2276,9 @@ const ChatApp = () => {
         onAdminLogin={handleAdminLogin}
         onAdminLogout={handleAdminLogout}
         registrationLogs={registrationLogs}
+        onlineUsers={onlineUsers}
+        onDeleteGift={handleDeleteGift}
+        customGifts={customGifts}
       />
 
       {/* Registration Modal */}
