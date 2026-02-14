@@ -2231,6 +2231,10 @@ const ChatApp = () => {
           setShowSettings(false);
           setShowStarsSettings(true);
         }}
+        isAdmin={isAdmin}
+        onAdminLogin={handleAdminLogin}
+        onAdminLogout={handleAdminLogout}
+        registrationLogs={registrationLogs}
       />
 
       {/* Registration Modal */}
