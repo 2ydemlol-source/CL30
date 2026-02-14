@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Phone, Video, MoreVertical, Paperclip, Smile, Menu, Image as ImageIcon, Settings, Sun, Moon, Trash2, Bot, Users, Edit2, Save, X, Plus, Gift } from 'lucide-react';
 import { initialContacts, initialMessages, currentUser, stickers, botCommands, commonCommands, availableGifts, botConfigs } from '../mockData';
-import { saveContacts, getContacts, saveMessages, getMessages, saveTheme, getTheme, saveUser, getUser, saveCustomCommands, getCustomCommands, saveCustomGifts, getCustomGifts, saveAppSettings, getAppSettings, saveBotConfigs, getBotConfigs, saveAdminStatus, getAdminStatus, saveRegistrationLogs, getRegistrationLogs, addRegistrationLog } from '../utils/localStorage';
+import { saveContacts, getContacts, saveMessages, getMessages, saveTheme, getTheme, saveUser, getUser, saveCustomCommands, getCustomCommands, saveCustomGifts, getCustomGifts, saveAppSettings, getAppSettings, saveBotConfigs, getBotConfigs, saveAdminStatus, getAdminStatus, saveRegistrationLogs, getRegistrationLogs, addRegistrationLog, getRegisteredUsers, addRegisteredUser, saveOnlineUsers, getOnlineUsers } from '../utils/localStorage';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
