@@ -97,6 +97,18 @@ const ChatApp = () => {
     toast({ title: '🔒 Выход из админ-режима', description: 'Административные функции отключены' });
   };
 
+  // Delete gift function for admins
+  const handleDeleteGift = (giftName) => {
+    const giftIndex = customGifts.findIndex(g => g.name.toLowerCase() === giftName.toLowerCase());
+    if (giftIndex !== -1) {
+      const updatedGifts = customGifts.filter((_, i) => i !== giftIndex);
+      setCustomGifts(updatedGifts);
+      saveCustomGifts(updatedGifts);
+      return true;
+    }
+    return false;
+  };
+
   // Limits for regular users
   const MAX_USER_CHANNELS = 5;
   const MAX_USER_BOTS = 5;
