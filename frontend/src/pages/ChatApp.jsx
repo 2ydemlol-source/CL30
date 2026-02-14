@@ -80,6 +80,8 @@ const ChatApp = () => {
   const [newGroupForm, setNewGroupForm] = useState({ name: '', username: '', avatar: '', members: [] });
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [showUserSearch, setShowUserSearch] = useState(false);
+  const [registeredUsers, setRegisteredUsers] = useState(() => getRegisteredUsers());
+  const [onlineUsers, setOnlineUsers] = useState(() => getOnlineUsers());
   const messagesEndRef = useRef(null);
 
   // Admin functions
