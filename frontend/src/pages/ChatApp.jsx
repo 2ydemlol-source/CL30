@@ -900,14 +900,12 @@ const ChatApp = () => {
         <div className="p-4 border-b border-zinc-800">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-[#2fa34e] rounded-lg flex items-center justify-center p-1">
-                <img 
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/ICQNewlogo.svg/1200px-ICQNewlogo.svg.png" 
-                  alt="ICQ Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-xl font-bold">icq</span>
+              <img 
+                src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+                alt="CL Logo" 
+                className="w-10 h-10 object-contain rounded-lg"
+              />
+              <span className="text-xl font-bold">CL</span>
             </div>
             <div className="flex items-center gap-2">
               <Button
