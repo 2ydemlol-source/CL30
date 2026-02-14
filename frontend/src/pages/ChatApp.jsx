@@ -667,10 +667,15 @@ const ChatApp = () => {
     }
   };
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (contact.usernames && contact.usernames.some(u => u.toLowerCase().includes(searchQuery.toLowerCase())))
-  );
+  const filteredContacts = contacts.filter(contact => {
+    // Hide admin-only contacts from regular users
+    if (contact.adminOnly && !isAdmin) {
+      return false;
+    }
+    // Apply search filter
+    return contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (contact.usernames && contact.usernames.some(u => u.toLowerCase().includes(searchQuery.toLowerCase())));
+  });
 
   const handleVideoCall = () => {
     toast({ title: 'Видеозвонок', description: `Начинаем видеозвонок с ${selectedChat.name}` });
