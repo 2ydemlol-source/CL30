@@ -1784,6 +1784,17 @@ const ChatApp = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            {/* Limits info for regular users */}
+            {!isAdmin && (
+              <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3 text-sm">
+                <p className="text-yellow-500 font-medium mb-1">Лимиты обычного пользователя:</p>
+                <div className="flex gap-4 text-xs text-zinc-400">
+                  <span>Боты: {userCreatedBots}/{MAX_USER_BOTS}</span>
+                  <span>Каналы: {userCreatedChannels}/{MAX_USER_CHANNELS}</span>
+                </div>
+              </div>
+            )}
+            
             <div className="space-y-2">
               <Label htmlFor="contact-type">Тип</Label>
               <select
@@ -1793,8 +1804,12 @@ const ChatApp = () => {
                 className="w-full bg-zinc-800 border border-zinc-700 rounded-md px-3 py-2 text-white"
               >
                 <option value="contact">Контакт</option>
-                <option value="bot">Бот</option>
-                <option value="channel">Канал</option>
+                <option value="bot" disabled={!isAdmin && userCreatedBots >= MAX_USER_BOTS}>
+                  Бот {!isAdmin && userCreatedBots >= MAX_USER_BOTS ? '(лимит)' : ''}
+                </option>
+                <option value="channel" disabled={!isAdmin && userCreatedChannels >= MAX_USER_CHANNELS}>
+                  Канал {!isAdmin && userCreatedChannels >= MAX_USER_CHANNELS ? '(лимит)' : ''}
+                </option>
               </select>
             </div>
 
@@ -1843,16 +1858,19 @@ const ChatApp = () => {
               </ScrollArea>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="new-contact-avatar">Или введите URL аватара</Label>
-              <Input
-                id="new-contact-avatar"
-                value={newContactForm.avatar}
-                onChange={(e) => setNewContactForm({ ...newContactForm, avatar: e.target.value })}
-                placeholder="https://example.com/avatar.png"
-                className="bg-zinc-800 border-zinc-700"
-              />
-            </div>
+            {/* URL avatar - admin only */}
+            {isAdmin && (
+              <div className="space-y-2">
+                <Label htmlFor="new-contact-avatar">Или введите URL аватара (админ)</Label>
+                <Input
+                  id="new-contact-avatar"
+                  value={newContactForm.avatar}
+                  onChange={(e) => setNewContactForm({ ...newContactForm, avatar: e.target.value })}
+                  placeholder="https://example.com/avatar.png"
+                  className="bg-zinc-800 border-zinc-700"
+                />
+              </div>
+            )}
 
             {newContactForm.avatar && (
               <div className="flex justify-center">
