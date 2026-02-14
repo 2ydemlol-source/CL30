@@ -76,6 +76,10 @@ const ChatApp = () => {
   const [editForm, setEditForm] = useState({ name: '', avatar: '', about: '', phone: '' });
   const [isAdmin, setIsAdmin] = useState(() => getAdminStatus());
   const [registrationLogs, setRegistrationLogs] = useState(() => getRegistrationLogs());
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+  const [newGroupForm, setNewGroupForm] = useState({ name: '', username: '', avatar: '', members: [] });
+  const [userSearchQuery, setUserSearchQuery] = useState('');
+  const [showUserSearch, setShowUserSearch] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Admin functions
