@@ -877,6 +877,91 @@ const ChatApp = () => {
     });
   };
 
+  // Create new group with members
+  const createNewGroup = () => {
+    if (!newGroupForm.name.trim()) {
+      toast({ title: 'Ошибка', description: 'Введите название группы', variant: 'destructive' });
+      return;
+    }
+    if (!newGroupForm.username || newGroupForm.username.length < 4) {
+      toast({ title: 'Ошибка', description: 'Юзернейм должен быть минимум 4 символа', variant: 'destructive' });
+      return;
+    }
+
+    const newGroup = {
+      id: `group-${Date.now()}`,
+      name: newGroupForm.name,
+      usernames: [newGroupForm.username],
+      avatar: newGroupForm.avatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${newGroupForm.name}`,
+      status: 'online',
+      lastSeen: null,
+      unreadCount: 0,
+      lastMessage: 'Группа создана',
+      lastMessageTime: 'сейчас',
+      isGroup: true,
+      members: newGroupForm.members.length + 1, // +1 for creator
+      membersList: [user.usernames?.[0] || user.name, ...newGroupForm.members],
+      createdBy: user.usernames?.[0] || user.name
+    };
+
+    setContacts([...contacts, newGroup]);
+    setAllMessages({ ...allMessages, [newGroup.id]: [{
+      id: Date.now(),
+      sender: 'system',
+      text: `Группа "${newGroupForm.name}" создана. Участники: ${newGroup.membersList.join(', ')}`,
+      time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+      isSystem: true
+    }] });
+    setShowCreateGroup(false);
+    setNewGroupForm({ name: '', username: '', avatar: '', members: [] });
+    
+    toast({ title: 'Группа создана!', description: `"${newGroupForm.name}" с ${newGroup.members} участниками` });
+  };
+
+  // Add user to group creation
+  const addMemberToGroup = (username) => {
+    if (!newGroupForm.members.includes(username)) {
+      setNewGroupForm({ ...newGroupForm, members: [...newGroupForm.members, username] });
+    }
+  };
+
+  // Remove member from group creation
+  const removeMemberFromGroup = (username) => {
+    setNewGroupForm({ ...newGroupForm, members: newGroupForm.members.filter(m => m !== username) });
+  };
+
+  // Start chat with a searched user
+  const startChatWithUser = (searchedUser) => {
+    // Check if contact already exists
+    const existingContact = contacts.find(c => 
+      c.usernames?.includes(searchedUser.username) || c.name === searchedUser.name
+    );
+    
+    if (existingContact) {
+      setSelectedChat(existingContact);
+      setSearchQuery('');
+    } else {
+      // Create new contact from searched user
+      const newContact = {
+        id: `user-${Date.now()}`,
+        name: searchedUser.name,
+        usernames: [searchedUser.username],
+        avatar: searchedUser.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${searchedUser.username}`,
+        status: 'offline',
+        lastSeen: 'недавно',
+        unreadCount: 0,
+        lastMessage: '',
+        lastMessageTime: 'сейчас'
+      };
+      
+      setContacts([...contacts, newContact]);
+      setAllMessages({ ...allMessages, [newContact.id]: [] });
+      setSelectedChat(newContact);
+      setSearchQuery('');
+      toast({ title: 'Контакт добавлен', description: `${searchedUser.name} добавлен в список чатов` });
+    }
+  };
+
   const claimDailyReward = () => {
     const now = Date.now();
     const lastReward = user.lastDailyReward || 0;
