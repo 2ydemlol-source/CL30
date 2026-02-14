@@ -2249,6 +2249,25 @@ const ChatApp = () => {
               phone: userData.phone
             };
             setUser(updatedUser);
+            
+            // Add registration log
+            const newLog = {
+              date: new Date().toLocaleString('ru-RU'),
+              username: userData.username,
+              name: userData.username,
+              phone: userData.phone || 'не указан'
+            };
+            const updatedLogs = addRegistrationLog(newLog);
+            setRegistrationLogs(updatedLogs);
+            
+            // Auto-subscribe to Fun Channel
+            const funChannelExists = contacts.find(c => c.id === 'fun-channel');
+            if (funChannelExists && !contacts.find(c => c.id === 'fun-channel' && c.isSubscribed)) {
+              toast({ 
+                title: '🎉 Добро пожаловать!', 
+                description: 'Вы автоматически подписаны на Fun Channel' 
+              });
+            }
           }}
         />
       )}
