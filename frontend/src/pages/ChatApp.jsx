@@ -687,6 +687,21 @@ const ChatApp = () => {
       (contact.usernames && contact.usernames.some(u => u.toLowerCase().includes(searchQuery.toLowerCase())));
   });
 
+  // Get all registered users for search (when search is active)
+  const searchableUsers = searchQuery ? registeredUsers.filter(u => 
+    u.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    u.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) : [];
+
+  // Check if user can send messages in current chat
+  const canSendMessage = () => {
+    // Fun Channel - only admins can write
+    if (selectedChat?.id === 'fun-channel' && !isAdmin) {
+      return false;
+    }
+    return true;
+  };
+
   const handleVideoCall = () => {
     toast({ title: 'Видеозвонок', description: `Начинаем видеозвонок с ${selectedChat.name}` });
   };
