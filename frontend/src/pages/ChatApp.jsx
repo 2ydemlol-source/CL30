@@ -989,6 +989,16 @@ const ChatApp = () => {
   };
 
   const updateSubscriberCount = () => {
+    // Only admins can change subscriber count
+    if (!isAdmin) {
+      toast({ 
+        title: 'Доступ запрещён', 
+        description: 'Только администраторы могут изменять количество подписчиков',
+        variant: 'destructive'
+      });
+      return;
+    }
+
     const newCount = parseInt(tempSubscriberCount);
     if (isNaN(newCount) || newCount < 0) {
       toast({ 
