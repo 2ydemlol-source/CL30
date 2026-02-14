@@ -10,7 +10,7 @@ import { Input } from './ui/input';
 import { ScrollArea } from './ui/scroll-area';
 import { toast } from '../hooks/use-toast';
 
-const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onOpenProfile, onOpenStars, isAdmin, onAdminLogin, onAdminLogout, registrationLogs }) => {
+const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onOpenProfile, onOpenStars, isAdmin, onAdminLogin, onAdminLogout, registrationLogs, onlineUsers, onDeleteGift, customGifts }) => {
   const [settings, setSettings] = useState(appSettings);
   const [consoleInput, setConsoleInput] = useState('');
   const [consoleOutput, setConsoleOutput] = useState([
@@ -25,7 +25,11 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
     const newOutput = [...consoleOutput, { type: 'input', text: `> ${cmd}` }];
     
     if (cmd === '/help') {
-      newOutput.push({ type: 'output', text: 'Доступные команды:\n/login [код] - войти как администратор\n/logout - выйти из админ-режима\n/status - проверить статус\n/logs - просмотр логов (только для админов)\n/clear - очистить консоль' });
+      let helpText = 'Доступные команды:\n/login [код] - войти как администратор\n/logout - выйти из админ-режима\n/status - проверить статус\n/logs - просмотр логов (только для админов)\n/clear - очистить консоль';
+      if (isAdmin) {
+        helpText += '\n\n📌 Админ-команды:\n/online - список онлайн пользователей\n/delgift [название] - удалить подарок';
+      }
+      newOutput.push({ type: 'output', text: helpText });
     } else if (cmd.startsWith('/login ')) {
       const code = cmd.split(' ')[1];
       if (code === 'hhsqs000091demyan_icqToCLxd') {
@@ -53,6 +57,33 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
           newOutput.push({ type: 'output', text: `📋 Последние регистрации:\n${logsText}` });
         } else {
           newOutput.push({ type: 'output', text: '📋 Логи регистраций пусты.' });
+        }
+      } else {
+        newOutput.push({ type: 'error', text: '❌ Доступ запрещён. Требуются права администратора.' });
+      }
+    } else if (cmd === '/online') {
+      if (isAdmin) {
+        if (onlineUsers && onlineUsers.length > 0) {
+          const onlineText = onlineUsers.map(u => `🟢 ${u.name} (@${u.username})`).join('\n');
+          newOutput.push({ type: 'output', text: `👥 Онлайн пользователи (${onlineUsers.length}):\n${onlineText}` });
+        } else {
+          newOutput.push({ type: 'output', text: '👥 Нет онлайн пользователей (кроме вас)' });
+        }
+      } else {
+        newOutput.push({ type: 'error', text: '❌ Доступ запрещён. Требуются права администратора.' });
+      }
+    } else if (cmd.startsWith('/delgift ')) {
+      if (isAdmin) {
+        const giftName = cmd.slice(9).trim();
+        if (giftName) {
+          const deleted = onDeleteGift && onDeleteGift(giftName);
+          if (deleted) {
+            newOutput.push({ type: 'success', text: `✅ Подарок "${giftName}" удалён!` });
+          } else {
+            newOutput.push({ type: 'error', text: `❌ Подарок "${giftName}" не найден` });
+          }
+        } else {
+          newOutput.push({ type: 'output', text: 'Использование: /delgift [название подарка]\nПример: /delgift Цветок' });
         }
       } else {
         newOutput.push({ type: 'error', text: '❌ Доступ запрещён. Требуются права администратора.' });
