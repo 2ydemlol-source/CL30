@@ -441,6 +441,12 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
                   <div>/logout - выход</div>
                   <div>/logs - логи (админ)</div>
                   <div>/clear - очистить</div>
+                  {isAdmin && (
+                    <>
+                      <div>/online - онлайн (админ)</div>
+                      <div>/delgift [имя] - удалить</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
