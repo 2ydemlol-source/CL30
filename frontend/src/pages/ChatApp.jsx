@@ -810,6 +810,26 @@ const ChatApp = () => {
       return;
     }
 
+    // Check limits for regular users
+    if (!isAdmin) {
+      if (newContactForm.type === 'bot' && userCreatedBots >= MAX_USER_BOTS) {
+        toast({ 
+          title: 'Лимит достигнут', 
+          description: `Обычные пользователи могут создать максимум ${MAX_USER_BOTS} ботов`,
+          variant: 'destructive'
+        });
+        return;
+      }
+      if (newContactForm.type === 'channel' && userCreatedChannels >= MAX_USER_CHANNELS) {
+        toast({ 
+          title: 'Лимит достигнут', 
+          description: `Обычные пользователи могут создать максимум ${MAX_USER_CHANNELS} каналов`,
+          variant: 'destructive'
+        });
+        return;
+      }
+    }
+
     const newContact = {
       id: `user-${Date.now()}`,
       name: newContactForm.name,
