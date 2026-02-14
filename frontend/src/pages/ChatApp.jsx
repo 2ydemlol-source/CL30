@@ -2180,6 +2180,22 @@ const ChatApp = () => {
           setShowStarsSettings(true);
         }}
       />
+
+      {/* Registration Modal */}
+      {showRegistration && (
+        <RegistrationModal
+          onComplete={(userData) => {
+            setShowRegistration(false);
+            const updatedUser = {
+              ...user,
+              name: userData.username,
+              usernames: [userData.username],
+              phone: userData.phone
+            };
+            setUser(updatedUser);
+          }}
+        />
+      )}
     </div>
   );
 };
