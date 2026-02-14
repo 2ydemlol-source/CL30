@@ -240,23 +240,27 @@ const ChatApp = () => {
       return;
     }
 
-    // Handle /sub command for Fun Channel
+    // Handle /sub command for Fun Channel - ADMIN ONLY
     if (commandKey === '/sub' && chatId === 'fun-channel') {
-      const subscriberCount = parseInt(command.split(' ')[1]);
-      if (!isNaN(subscriberCount) && subscriberCount >= 0) {
-        const updatedContacts = contacts.map(c => {
-          if (c.id === 'fun-channel') {
-            return { ...c, members: subscriberCount };
-          }
-          return c;
-        });
-        setContacts(updatedContacts);
-        if (selectedChat.id === 'fun-channel') {
-          setSelectedChat({ ...selectedChat, members: subscriberCount });
-        }
-        response = `✅ Количество подписчиков изменено на ${subscriberCount.toLocaleString()}!`;
+      if (!isAdmin) {
+        response = '❌ Команда /sub доступна только администраторам!';
       } else {
-        response = 'Использование: /sub [число]\nПример: /sub 8000000';
+        const subscriberCount = parseInt(command.split(' ')[1]);
+        if (!isNaN(subscriberCount) && subscriberCount >= 0) {
+          const updatedContacts = contacts.map(c => {
+            if (c.id === 'fun-channel') {
+              return { ...c, members: subscriberCount };
+            }
+            return c;
+          });
+          setContacts(updatedContacts);
+          if (selectedChat.id === 'fun-channel') {
+            setSelectedChat({ ...selectedChat, members: subscriberCount });
+          }
+          response = `✅ Количество подписчиков изменено на ${subscriberCount.toLocaleString()}!`;
+        } else {
+          response = 'Использование: /sub [число]\nПример: /sub 8000000';
+        }
       }
     }
     // Handle /addcommand - works in all chats except Fun Channel
