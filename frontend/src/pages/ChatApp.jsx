@@ -1387,25 +1387,33 @@ const ChatApp = () => {
             <Button variant="ghost" size="icon" className="hover:bg-zinc-800">
               <Paperclip className="w-5 h-5" />
             </Button>
-            <Input
-              placeholder="Напишите сообщение или /commands для помощи..."
-              className="flex-1 bg-zinc-900 border-zinc-800 focus:border-[#2fa34e]"
-              value={messageInput}
-              onChange={(e) => setMessageInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-            />
-            <Button
-              onClick={handleSendMessage}
-              className="bg-[#2fa34e] hover:bg-[#258a3c] text-white rounded-full w-10 h-10 p-0 flex items-center justify-center"
-            >
-              <svg 
-                viewBox="0 0 24 24" 
-                fill="currentColor" 
-                className="w-5 h-5"
-              >
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-              </svg>
-            </Button>
+            {canSendMessage() ? (
+              <>
+                <Input
+                  placeholder="Напишите сообщение или /commands для помощи..."
+                  className="flex-1 bg-zinc-900 border-zinc-800 focus:border-[#2fa34e]"
+                  value={messageInput}
+                  onChange={(e) => setMessageInput(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  className="bg-[#2fa34e] hover:bg-[#258a3c] text-white rounded-full w-10 h-10 p-0 flex items-center justify-center"
+                >
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill="currentColor" 
+                    className="w-5 h-5"
+                  >
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  </svg>
+                </Button>
+              </>
+            ) : (
+              <div className="flex-1 bg-zinc-900 border border-zinc-800 rounded-md px-4 py-2 text-zinc-500 text-sm flex items-center">
+                <span>Только администраторы могут писать в этот канал</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
