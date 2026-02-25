@@ -1,22 +1,48 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Send, Search, LogOut, Users, MessageCircle, Circle } from 'lucide-react';
+import { Send, Search, LogOut, MessageCircle, Circle, Settings, ArrowLeftRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import { ScrollArea } from '../components/ui/scroll-area';
-import { Badge } from '../components/ui/badge';
 import { toast } from '../hooks/use-toast';
 import { authApi, usersApi, messagesApi, ChatWebSocket } from '../services/api';
 
+const BRAND_ICON = 'https://cdn.worldvectorlogo.com/logos/telegram-1.svg';
+
+const THEMES = {
+  telegram: {
+    app: 'bg-[#e8f1fa]',
+    sidebar: 'bg-white border-[#d8e4f1]',
+    panel: 'bg-[#f2f7fc] border-[#d8e4f1]',
+    text: 'text-[#1f2f46]',
+    secondary: 'text-[#6c7a91]',
+    accent: 'bg-[#2aabee] hover:bg-[#1f96d8]',
+    incoming: 'bg-white border border-[#d9e5f1] text-[#1f2f46]',
+    outgoing: 'bg-[#dff5ff] border border-[#bee8fb] text-[#1f2f46]',
+    online: 'text-[#31c765]'
+  },
+  midnight: {
+    app: 'bg-[#0b1220]',
+    sidebar: 'bg-[#101a2f] border-[#1f2b43]',
+    panel: 'bg-[#111f36] border-[#1f2b43]',
+    text: 'text-[#f1f5ff]',
+    secondary: 'text-[#9aabc8]',
+    accent: 'bg-[#2aabee] hover:bg-[#1f96d8]',
+    incoming: 'bg-[#1a2740] border border-[#2b3f63] text-[#e7eefc]',
+    outgoing: 'bg-[#143759] border border-[#25527e] text-[#e7eefc]',
+    online: 'text-[#59d98e]'
+  }
+};
+
 const RealChat = () => {
-  // Auth state
+  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+  const [authMode, setAuthMode] = useState('login');
   const [authForm, setAuthForm] = useState({ username: '', password: '', name: '' });
   const [authLoading, setAuthLoading] = useState(false);
-  
-  // Chat state
+
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -24,45 +50,49 @@ const RealChat = () => {
   const [conversations, setConversations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const [isTyping, setIsTyping] = useState(false);
   const [typingUser, setTypingUser] = useState(null);
-  
-  const messagesEndRef = useRef(null);
+
+  const [theme, setTheme] = useState(localStorage.getItem('nethgram_theme') || 'telegram');
+  const [showSettings, setShowSettings] = useState(false);
+
   const wsRef = useRef(null);
-  
-  // Check auth on mount
+  const messagesEndRef = useRef(null);
+
+  const themeStyles = THEMES[theme] || THEMES.telegram;
+
+  const patchPresence = useCallback((userId, isOnline) => {
+    setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, isOnline } : u)));
+    setSearchResults((prev) => prev.map((u) => (u.id === userId ? { ...u, isOnline } : u)));
+    setConversations((prev) => prev.map((c) => (c.user.id === userId ? { ...c, user: { ...c.user, isOnline } } : c)));
+    setSelectedUser((prev) => (prev?.id === userId ? { ...prev, isOnline } : prev));
+  }, []);
+
   useEffect(() => {
     const token = localStorage.getItem('cl_auth_token');
     if (token) {
       checkAuth();
     }
   }, []);
-  
-  // Auto-scroll messages
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-  
-  // Load conversations when authenticated
+
   useEffect(() => {
     if (isAuthenticated) {
       loadConversations();
       loadUsers();
       connectWebSocket();
     }
-    return () => {
-      wsRef.current?.disconnect();
-    };
+    return () => wsRef.current?.disconnect();
   }, [isAuthenticated]);
-  
-  // Load messages when user selected
+
   useEffect(() => {
     if (selectedUser) {
       loadMessages(selectedUser.id);
     }
   }, [selectedUser]);
-  
-  // Search users
+
   useEffect(() => {
     if (searchQuery.length >= 2) {
       searchUsers(searchQuery);
@@ -70,428 +100,283 @@ const RealChat = () => {
       setSearchResults([]);
     }
   }, [searchQuery]);
-  
+
   const checkAuth = async () => {
     try {
       const user = await authApi.getMe();
       setCurrentUser(user);
       setIsAuthenticated(true);
-    } catch (error) {
+    } catch {
       localStorage.removeItem('cl_auth_token');
     }
   };
-  
+
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthLoading(true);
-    
+
     try {
-      let result;
-      if (authMode === 'login') {
-        result = await authApi.login(authForm.username, authForm.password);
-      } else {
-        result = await authApi.register(authForm.username, authForm.password, authForm.name);
-      }
-      
+      const result = authMode === 'login'
+        ? await authApi.login(authForm.username, authForm.password)
+        : await authApi.register(authForm.username, authForm.password, authForm.name);
+
       localStorage.setItem('cl_auth_token', result.token);
       setCurrentUser(result.user);
       setIsAuthenticated(true);
-      toast({ title: 'Успешно!', description: `Добро пожаловать, ${result.user.name}!` });
+      toast({ title: 'Nethgram', description: `Добро пожаловать, ${result.user.name}!` });
     } catch (error) {
       toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
     } finally {
       setAuthLoading(false);
     }
   };
-  
+
   const handleLogout = async () => {
     try {
       await authApi.logout();
-    } catch (e) {}
+    } catch {}
+    wsRef.current?.disconnect();
     localStorage.removeItem('cl_auth_token');
     setIsAuthenticated(false);
     setCurrentUser(null);
     setSelectedUser(null);
     setMessages([]);
-    wsRef.current?.disconnect();
   };
-  
+
   const connectWebSocket = () => {
     const token = localStorage.getItem('cl_auth_token');
     if (!token) return;
-    
     wsRef.current = new ChatWebSocket(token, handleWebSocketMessage);
     wsRef.current.connect();
   };
-  
+
   const handleWebSocketMessage = useCallback((data) => {
-    if (data.type === 'new_message') {
-      // Add message if from selected user
-      if (data.message.senderId === selectedUser?.id) {
-        setMessages(prev => [...prev, data.message]);
+    if (data.type === 'new_message' || data.type === 'message_sent') {
+      const incoming = data.message;
+      if (selectedUser && (incoming.senderId === selectedUser.id || incoming.receiverId === selectedUser.id)) {
+        setMessages((prev) => [...prev, incoming]);
       }
-      // Refresh conversations
       loadConversations();
-      toast({ title: 'Новое сообщение', description: `${data.message.senderName}: ${data.message.text.slice(0, 50)}` });
-    } else if (data.type === 'typing') {
-      if (data.senderId === selectedUser?.id) {
-        setTypingUser(data.senderId);
-        setTimeout(() => setTypingUser(null), 3000);
-      }
+      loadUsers();
+    } else if (data.type === 'typing' && data.senderId === selectedUser?.id) {
+      setTypingUser(data.senderId);
+      setTimeout(() => setTypingUser(null), 2500);
+    } else if (data.type === 'presence') {
+      patchPresence(data.userId, data.isOnline);
     }
-  }, [selectedUser]);
-  
+  }, [selectedUser, patchPresence]);
+
   const loadUsers = async () => {
     try {
-      const data = await usersApi.getAll();
-      setUsers(data);
+      setUsers(await usersApi.getAll());
     } catch (error) {
-      console.error('Failed to load users:', error);
+      console.error(error);
     }
   };
-  
+
   const loadConversations = async () => {
     try {
-      const data = await messagesApi.getConversations();
-      setConversations(data);
+      setConversations(await messagesApi.getConversations());
     } catch (error) {
-      console.error('Failed to load conversations:', error);
+      console.error(error);
     }
   };
-  
+
   const loadMessages = async (userId) => {
     try {
-      const data = await messagesApi.getWithUser(userId);
-      setMessages(data);
-    } catch (error) {
-      console.error('Failed to load messages:', error);
-    }
-  };
-  
-  const searchUsers = async (query) => {
-    try {
-      const data = await usersApi.search(query);
-      setSearchResults(data);
-    } catch (error) {
-      console.error('Failed to search users:', error);
-    }
-  };
-  
-  const sendMessage = async () => {
-    if (!messageInput.trim() || !selectedUser) return;
-    
-    const text = messageInput.trim();
-    setMessageInput('');
-    
-    try {
-      const message = await messagesApi.send(selectedUser.id, text);
-      setMessages(prev => [...prev, message]);
+      setMessages(await messagesApi.getWithUser(userId));
       loadConversations();
     } catch (error) {
-      toast({ title: 'Ошибка', description: 'Не удалось отправить сообщение', variant: 'destructive' });
-      setMessageInput(text);
+      console.error(error);
     }
   };
-  
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+
+  const searchUsers = async (query) => {
+    try {
+      setSearchResults(await usersApi.search(query));
+    } catch (error) {
+      console.error(error);
     }
   };
-  
+
   const selectUser = (user) => {
     setSelectedUser(user);
-    setSearchQuery('');
     setSearchResults([]);
+    setSearchQuery('');
   };
-  
-  // Auth Screen
+
+  const sendMessage = async () => {
+    if (!messageInput.trim() || !selectedUser) return;
+
+    const text = messageInput.trim();
+    setMessageInput('');
+    try {
+      await messagesApi.send(selectedUser.id, text);
+    } catch {
+      toast({ title: 'Ошибка', description: 'Не удалось отправить сообщение', variant: 'destructive' });
+    }
+  };
+
+  const handleTyping = (event) => {
+    setMessageInput(event.target.value);
+    if (selectedUser) {
+      wsRef.current?.sendTyping(selectedUser.id);
+    }
+  };
+
+  const handleThemeChange = (nextTheme) => {
+    setTheme(nextTheme);
+    localStorage.setItem('nethgram_theme', nextTheme);
+  };
+
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-[#2fa34e] rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white text-3xl font-bold">CL</span>
+      <div className={`h-screen ${themeStyles.app} flex items-center justify-center px-4`}>
+        <div className="w-full max-w-sm rounded-3xl p-8 bg-white shadow-2xl animate-[fadeIn_.35s_ease-out]">
+          <div className="flex flex-col items-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-[#2aabee]/10 flex items-center justify-center mb-4 animate-[zoomIn_.35s_ease-out]">
+              <img src={BRAND_ICON} alt="Nethgram" className="w-10 h-10" />
             </div>
-            <h1 className="text-2xl font-bold text-white">CL Messenger</h1>
-            <p className="text-zinc-400 mt-2">Реальный мультиплеер</p>
+            <h1 className="text-2xl font-bold text-[#1f2f46]">Nethgram</h1>
+            <p className="text-sm text-[#6c7a91]">Войдите для общения в реальном времени</p>
           </div>
-          
-          <div className="bg-zinc-900 rounded-xl p-6 border border-zinc-800">
-            <div className="flex mb-6">
-              <button
-                onClick={() => setAuthMode('login')}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  authMode === 'login'
-                    ? 'text-[#2fa34e] border-b-2 border-[#2fa34e]'
-                    : 'text-zinc-400 border-b border-zinc-700'
-                }`}
-              >
-                Вход
-              </button>
-              <button
-                onClick={() => setAuthMode('register')}
-                className={`flex-1 py-2 text-sm font-medium transition-colors ${
-                  authMode === 'register'
-                    ? 'text-[#2fa34e] border-b-2 border-[#2fa34e]'
-                    : 'text-zinc-400 border-b border-zinc-700'
-                }`}
-              >
-                Регистрация
-              </button>
-            </div>
-            
-            <form onSubmit={handleAuth} className="space-y-4">
-              {authMode === 'register' && (
-                <div>
-                  <label className="text-sm text-zinc-400 mb-1 block">Имя</label>
-                  <Input
-                    value={authForm.name}
-                    onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })}
-                    placeholder="Ваше имя"
-                    className="bg-zinc-800 border-zinc-700"
-                  />
-                </div>
-              )}
-              <div>
-                <label className="text-sm text-zinc-400 mb-1 block">Логин</label>
-                <Input
-                  value={authForm.username}
-                  onChange={(e) => setAuthForm({ ...authForm, username: e.target.value })}
-                  placeholder="username"
-                  className="bg-zinc-800 border-zinc-700"
-                  required
-                />
-              </div>
-              <div>
-                <label className="text-sm text-zinc-400 mb-1 block">Пароль</label>
-                <Input
-                  type="password"
-                  value={authForm.password}
-                  onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
-                  placeholder="••••••"
-                  className="bg-zinc-800 border-zinc-700"
-                  required
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full bg-[#2fa34e] hover:bg-[#258a3c]"
-                disabled={authLoading}
-              >
-                {authLoading ? 'Загрузка...' : authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
-              </Button>
-            </form>
+
+          <div className="flex mb-5 text-sm">
+            <button onClick={() => setAuthMode('login')} className={`flex-1 pb-2 border-b-2 ${authMode === 'login' ? 'border-[#2aabee] text-[#2aabee]' : 'border-transparent text-[#6c7a91]'}`}>Вход</button>
+            <button onClick={() => setAuthMode('register')} className={`flex-1 pb-2 border-b-2 ${authMode === 'register' ? 'border-[#2aabee] text-[#2aabee]' : 'border-transparent text-[#6c7a91]'}`}>Регистрация</button>
           </div>
+
+          <form onSubmit={handleAuth} className="space-y-3 animate-[slideUp_.3s_ease-out]">
+            {authMode === 'register' && (
+              <Input value={authForm.name} onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })} placeholder="Имя" />
+            )}
+            <Input value={authForm.username} onChange={(e) => setAuthForm({ ...authForm, username: e.target.value })} placeholder="Username" required />
+            <Input type="password" value={authForm.password} onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })} placeholder="Пароль" required />
+            <Button type="submit" className={`w-full ${themeStyles.accent}`} disabled={authLoading}>
+              {authLoading ? 'Загрузка...' : authMode === 'login' ? 'Войти' : 'Создать аккаунт'}
+            </Button>
+          </form>
         </div>
       </div>
     );
   }
-  
-  // Main Chat Screen
+
   return (
-    <div className="h-screen bg-zinc-950 flex">
-      {/* Sidebar */}
-      <div className="w-80 bg-zinc-900 border-r border-zinc-800 flex flex-col">
-        {/* Header */}
-        <div className="p-4 border-b border-zinc-800">
+    <div className={`h-screen flex ${themeStyles.app} ${themeStyles.text}`}>
+      <div className={`w-80 border-r ${themeStyles.sidebar} flex flex-col`}>
+        <div className={`p-4 border-b ${themeStyles.sidebar}`}>
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={currentUser?.avatar} />
-                <AvatarFallback>{currentUser?.name?.[0]}</AvatarFallback>
-              </Avatar>
+            <div className="flex items-center gap-2">
+              <img src={BRAND_ICON} alt="Nethgram" className="w-8 h-8" />
               <div>
-                <h2 className="font-medium text-white">{currentUser?.name}</h2>
-                <p className="text-xs text-[#2fa34e]">@{currentUser?.username}</p>
+                <p className="font-semibold">Nethgram</p>
+                <p className={`text-xs ${themeStyles.secondary}`}>@{currentUser?.username}</p>
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <LogOut className="w-5 h-5 text-zinc-400" />
-            </Button>
+            <div className="flex gap-1">
+              <Button variant="ghost" size="icon" onClick={() => setShowSettings((v) => !v)}><Settings className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={handleLogout}><LogOut className="w-4 h-4" /></Button>
+            </div>
           </div>
-          
-          {/* Search */}
+
+          {showSettings && (
+            <div className={`mb-3 rounded-2xl border p-3 ${themeStyles.panel}`}>
+              <p className="text-sm font-medium mb-2">Настройки</p>
+              <div className="flex gap-2 mb-2">
+                <Button size="sm" variant={theme === 'telegram' ? 'default' : 'outline'} className={theme === 'telegram' ? themeStyles.accent : ''} onClick={() => handleThemeChange('telegram')}>Голубо-белая</Button>
+                <Button size="sm" variant={theme === 'midnight' ? 'default' : 'outline'} className={theme === 'midnight' ? themeStyles.accent : ''} onClick={() => handleThemeChange('midnight')}>Темная</Button>
+              </div>
+              <Button size="sm" variant="outline" className="w-full" onClick={() => navigate('/classic')}>
+                <ArrowLeftRight className="w-4 h-4 mr-2" />Старый интерфейс
+              </Button>
+            </div>
+          )}
+
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Поиск пользователей..."
-              className="pl-10 bg-zinc-800 border-zinc-700"
-            />
+            <Search className={`absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 ${themeStyles.secondary}`} />
+            <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Поиск" className="pl-10" />
           </div>
         </div>
-        
-        {/* Search Results */}
+
         {searchResults.length > 0 && (
-          <div className="p-2 border-b border-zinc-800">
-            <p className="text-xs text-zinc-500 px-2 mb-2">Найдены пользователи</p>
+          <div className="px-2 pt-2">
             {searchResults.map((user) => (
-              <div
-                key={user.id}
-                onClick={() => selectUser(user)}
-                className="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-zinc-800"
-              >
-                <div className="relative">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  {user.isOnline && (
-                    <Circle className="absolute bottom-0 right-0 w-3 h-3 fill-[#2fa34e] text-[#2fa34e]" />
-                  )}
+              <button key={user.id} onClick={() => selectUser(user)} className={`w-full text-left flex items-center gap-3 p-2 rounded-xl hover:bg-black/5`}>
+                <Avatar className="w-10 h-10"><AvatarImage src={user.avatar} /><AvatarFallback>{user.name?.[0]}</AvatarFallback></Avatar>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{user.name}</p>
+                  <p className={`truncate text-xs ${themeStyles.secondary}`}>@{user.username}</p>
                 </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-zinc-400">@{user.username}</p>
-                </div>
-              </div>
+              </button>
             ))}
           </div>
         )}
-        
-        {/* Conversations */}
+
         <ScrollArea className="flex-1">
           <div className="p-2">
-            {conversations.length === 0 && users.length > 0 && !searchQuery && (
-              <>
-                <p className="text-xs text-zinc-500 px-2 mb-2">Все пользователи</p>
-                {users.map((user) => (
-                  <div
-                    key={user.id}
-                    onClick={() => selectUser(user)}
-                    className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                      selectedUser?.id === user.id ? 'bg-zinc-800' : 'hover:bg-zinc-800/50'
-                    }`}
-                  >
-                    <div className="relative">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={user.avatar} />
-                        <AvatarFallback>{user.name[0]}</AvatarFallback>
-                      </Avatar>
-                      {user.isOnline && (
-                        <Circle className="absolute bottom-0 right-0 w-3 h-3 fill-[#2fa34e] text-[#2fa34e]" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-white font-medium truncate">{user.name}</p>
-                      <p className="text-sm text-zinc-400">@{user.username}</p>
-                    </div>
-                  </div>
-                ))}
-              </>
-            )}
-            
-            {conversations.map((conv) => (
-              <div
-                key={conv.user.id}
-                onClick={() => selectUser(conv.user)}
-                className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                  selectedUser?.id === conv.user.id ? 'bg-zinc-800' : 'hover:bg-zinc-800/50'
-                }`}
-              >
+            {(conversations.length ? conversations.map((conv) => conv.user) : users).map((user) => (
+              <button key={user.id} onClick={() => selectUser(user)} className={`w-full text-left flex items-center gap-3 p-3 rounded-xl ${selectedUser?.id === user.id ? 'bg-[#2aabee]/20' : 'hover:bg-black/5'}`}>
                 <div className="relative">
-                  <Avatar className="w-12 h-12">
-                    <AvatarImage src={conv.user.avatar} />
-                    <AvatarFallback>{conv.user.name[0]}</AvatarFallback>
-                  </Avatar>
-                  {conv.user.isOnline && (
-                    <Circle className="absolute bottom-0 right-0 w-3 h-3 fill-[#2fa34e] text-[#2fa34e]" />
-                  )}
+                  <Avatar className="w-11 h-11"><AvatarImage src={user.avatar} /><AvatarFallback>{user.name?.[0]}</AvatarFallback></Avatar>
+                  {user.isOnline && <Circle className={`absolute bottom-0 right-0 w-3 h-3 fill-current ${themeStyles.online}`} />}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="text-white font-medium truncate">{conv.user.name}</p>
-                    {conv.unreadCount > 0 && (
-                      <Badge className="bg-[#2fa34e] text-white">{conv.unreadCount}</Badge>
-                    )}
-                  </div>
-                  <p className="text-sm text-zinc-400 truncate">{conv.lastMessage}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate">{user.name}</p>
+                  <p className={`text-xs truncate ${themeStyles.secondary}`}>@{user.username}</p>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </ScrollArea>
       </div>
-      
-      {/* Chat Area */}
+
       <div className="flex-1 flex flex-col">
         {selectedUser ? (
           <>
-            {/* Chat Header */}
-            <div className="p-4 border-b border-zinc-800 flex items-center gap-3">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src={selectedUser.avatar} />
-                <AvatarFallback>{selectedUser.name[0]}</AvatarFallback>
-              </Avatar>
+            <div className={`p-4 border-b ${themeStyles.sidebar} flex items-center gap-3`}>
+              <Avatar className="w-10 h-10"><AvatarImage src={selectedUser.avatar} /><AvatarFallback>{selectedUser.name?.[0]}</AvatarFallback></Avatar>
               <div>
-                <h2 className="font-medium text-white">{selectedUser.name}</h2>
-                <p className="text-xs text-zinc-400">
-                  {selectedUser.isOnline ? (
-                    <span className="text-[#2fa34e]">онлайн</span>
-                  ) : (
-                    'был(а) недавно'
-                  )}
-                  {typingUser === selectedUser.id && (
-                    <span className="text-[#2fa34e] ml-2">печатает...</span>
-                  )}
+                <p className="font-semibold">{selectedUser.name}</p>
+                <p className={`text-xs ${themeStyles.secondary}`}>
+                  {typingUser === selectedUser.id ? 'печатает...' : selectedUser.isOnline ? 'онлайн' : 'не в сети'}
                 </p>
               </div>
             </div>
-            
-            {/* Messages */}
+
             <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${msg.senderId === currentUser?.id ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[70%] rounded-2xl px-4 py-2 ${
-                        msg.senderId === currentUser?.id
-                          ? 'bg-[#2fa34e] text-white'
-                          : 'bg-zinc-800 text-white'
-                      }`}
-                    >
-                      <p>{msg.text}</p>
-                      <p className={`text-xs mt-1 ${
-                        msg.senderId === currentUser?.id ? 'text-green-200' : 'text-zinc-500'
-                      }`}>
-                        {new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+              <div className="space-y-3">
+                {messages.map((msg) => {
+                  const mine = msg.senderId === currentUser?.id;
+                  return (
+                    <div key={msg.id} className={`flex ${mine ? 'justify-end' : 'justify-start'} animate-[slideUp_.2s_ease-out]`}>
+                      <div className={`max-w-[72%] rounded-2xl px-4 py-2 ${mine ? themeStyles.outgoing : themeStyles.incoming}`}>
+                        <p className="text-sm break-words">{msg.text}</p>
+                        <div className="flex items-center justify-end gap-1 mt-1">
+                          <p className={`text-[11px] ${themeStyles.secondary}`}>
+                            {new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
-            
-            {/* Input */}
-            <div className="p-4 border-t border-zinc-800">
+
+            <div className={`p-4 border-t ${themeStyles.sidebar}`}>
               <div className="flex gap-2">
-                <Input
-                  value={messageInput}
-                  onChange={(e) => setMessageInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Напишите сообщение..."
-                  className="flex-1 bg-zinc-800 border-zinc-700"
-                />
-                <Button onClick={sendMessage} className="bg-[#2fa34e] hover:bg-[#258a3c]">
-                  <Send className="w-5 h-5" />
-                </Button>
+                <Input value={messageInput} onChange={handleTyping} onKeyDown={(e) => e.key === 'Enter' && sendMessage()} placeholder="Сообщение" className="flex-1" />
+                <Button onClick={sendMessage} className={themeStyles.accent}><Send className="w-4 h-4" /></Button>
               </div>
             </div>
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <MessageCircle className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-              <h2 className="text-xl font-medium text-zinc-400">Выберите чат</h2>
-              <p className="text-zinc-500 mt-2">Или найдите пользователя в поиске</p>
+              <MessageCircle className={`w-16 h-16 mx-auto mb-3 ${themeStyles.secondary}`} />
+              <p className="text-lg font-medium">Выберите чат</p>
+              <p className={`text-sm ${themeStyles.secondary}`}>Nethgram Online</p>
             </div>
           </div>
         )}

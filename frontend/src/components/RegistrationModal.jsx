@@ -108,14 +108,14 @@ const RegistrationModal = ({ onComplete }) => {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <img 
-              src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+              src="https://cdn.worldvectorlogo.com/logos/telegram-1.svg" 
               alt="CL Logo" 
               className="w-32 h-32 rounded-3xl shadow-2xl"
             />
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl font-bold text-center mb-3 text-white">Добро пожаловать в CL Messenger!</h1>
+          <h1 className="text-4xl font-bold text-center mb-3 text-white">Добро пожаловать в Nethgram!</h1>
           <p className="text-zinc-400 text-center text-lg mb-10">Версия 3.0 - "Открытие серверов"</p>
 
           {/* Features */}
@@ -135,7 +135,7 @@ const RegistrationModal = ({ onComplete }) => {
             <div className="bg-zinc-800/50 backdrop-blur rounded-xl p-6 border border-zinc-700">
               <h3 className="font-semibold text-lg mb-3">📜 Условия использования:</h3>
               <p className="text-zinc-300">
-                Продолжая, вы соглашаетесь с условиями использования CL Messenger и политикой конфиденциальности. 
+                Продолжая, вы соглашаетесь с условиями использования Nethgram и политикой конфиденциальности. 
                 Ваши данные будут сохранены локально на вашем устройстве.
               </p>
             </div>
@@ -159,7 +159,7 @@ const RegistrationModal = ({ onComplete }) => {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <img 
-            src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+            src="https://cdn.worldvectorlogo.com/logos/telegram-1.svg" 
             alt="CL Logo" 
             className="w-24 h-24 rounded-2xl shadow-2xl"
           />

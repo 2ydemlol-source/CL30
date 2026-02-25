@@ -22,7 +22,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # Create the main app
-app = FastAPI(title="CL Messenger API")
+app = FastAPI(title="Nethgram API")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -121,11 +121,14 @@ class ConnectionManager:
         self.active_connections[user_id] = websocket
         # Update user online status
         await db.users.update_one({"id": user_id}, {"$set": {"isOnline": True}})
+        await self.broadcast_presence(user_id, True)
         logger.info(f"User {user_id} connected. Total connections: {len(self.active_connections)}")
     
-    def disconnect(self, user_id: str):
+    async def disconnect(self, user_id: str):
         if user_id in self.active_connections:
             del self.active_connections[user_id]
+        await db.users.update_one({"id": user_id}, {"$set": {"isOnline": False}})
+        await self.broadcast_presence(user_id, False)
         logger.info(f"User {user_id} disconnected. Total connections: {len(self.active_connections)}")
     
     async def send_personal_message(self, message: dict, user_id: str):
@@ -134,6 +137,13 @@ class ConnectionManager:
                 await self.active_connections[user_id].send_json(message)
             except Exception as e:
                 logger.error(f"Error sending message to {user_id}: {e}")
+
+    async def broadcast_presence(self, user_id: str, is_online: bool):
+        payload = {"type": "presence", "userId": user_id, "isOnline": is_online}
+        for target_id in list(self.active_connections.keys()):
+            if target_id == user_id:
+                continue
+            await self.send_personal_message(payload, target_id)
 
 manager = ConnectionManager()
 
@@ -293,6 +303,11 @@ async def send_message(data: MessageCreate, current_user: dict = Depends(get_cur
         "type": "new_message",
         "message": message
     }, data.receiverId)
+
+    await manager.send_personal_message({
+        "type": "message_sent",
+        "message": message
+    }, current_user["id"])
     
     return MessageResponse(**message)
 
@@ -399,18 +414,34 @@ async def websocket_endpoint(websocket: WebSocket, token: str):
                         "type": "typing",
                         "senderId": user_id
                     }, receiver_id)
+            elif message_data.get("type") == "send_message":
+                receiver_id = message_data.get("receiverId")
+                text = (message_data.get("text") or "").strip()
+                if receiver_id and text:
+                    sender = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
+                    message = {
+                        "id": str(uuid.uuid4())[:12],
+                        "senderId": user_id,
+                        "senderName": sender.get("name", "Unknown") if sender else "Unknown",
+                        "receiverId": receiver_id,
+                        "text": text,
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "isRead": False
+                    }
+                    await db.messages.insert_one(message)
+                    await manager.send_personal_message({"type": "new_message", "message": message}, receiver_id)
+                    await manager.send_personal_message({"type": "message_sent", "message": message}, user_id)
     except WebSocketDisconnect:
-        manager.disconnect(user_id)
-        await db.users.update_one({"id": user_id}, {"$set": {"isOnline": False}})
+        await manager.disconnect(user_id)
     except Exception as e:
         logger.error(f"WebSocket error: {e}")
-        manager.disconnect(user_id)
+        await manager.disconnect(user_id)
 
 # ==================== STATUS ROUTES ====================
 
 @api_router.get("/")
 async def root():
-    return {"message": "CL Messenger API v1.0", "status": "running"}
+    return {"message": "Nethgram API v1.0", "status": "running"}
 
 @api_router.get("/health")
 async def health():

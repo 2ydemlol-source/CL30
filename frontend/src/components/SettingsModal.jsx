@@ -458,12 +458,12 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
               <div className="bg-zinc-800 rounded-lg p-6 text-center">
                 <div className="w-20 h-20 bg-[#2fa34e] rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <img 
-                    src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+                    src="https://cdn.worldvectorlogo.com/logos/telegram-1.svg" 
                     alt="CL Logo" 
                     className="w-16 h-16 rounded-xl"
                   />
                 </div>
-                <h2 className="text-2xl font-bold mb-2">CL Messenger</h2>
+                <h2 className="text-2xl font-bold mb-2">Nethgram</h2>
                 <p className="text-zinc-400 mb-4">Версия 3.0 - "Открытие серверов"</p>
               </div>
 
@@ -481,7 +481,7 @@ const SettingsModal = ({ isOpen, onClose, appSettings, onSaveSettings, user, onO
 
               <div className="bg-zinc-800 rounded-lg p-4 text-center">
                 <p className="text-sm text-zinc-400">
-                  © 2025 CL Messenger<br/>
+                  © 2025 Nethgram<br/>
                   Все права защищены
                 </p>
               </div>
