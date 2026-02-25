@@ -16,6 +16,7 @@ import GiftMessage from '../components/GiftMessage';
 import MyProfileModal from '../components/MyProfileModal';
 import SettingsModal from '../components/SettingsModal';
 import RegistrationModal from '../components/RegistrationModal';
+import LottieGift from '../components/LottieGift';
 
 const ChatApp = () => {
   // Initialize state from localStorage or defaults
@@ -83,6 +84,7 @@ const ChatApp = () => {
   const [registeredUsers, setRegisteredUsers] = useState(() => getRegisteredUsers());
   const [onlineUsers, setOnlineUsers] = useState(() => getOnlineUsers());
   const messagesEndRef = useRef(null);
+  const [selfGiftAnimation, setSelfGiftAnimation] = useState(false);
 
   // Admin functions
   const handleAdminLogin = () => {
@@ -616,7 +618,19 @@ const ChatApp = () => {
   };
 
   const handleSendGift = (gift) => {
-    // Deduct stars from user
+    const left = gift.totalSupply == null ? null : Math.max((gift.totalSupply || 0) - (gift.mintedCount || 0), 0);
+    if (left === 0) {
+      toast({ title: 'Подарок раскуплен', description: `${gift.name} недоступен`, variant: 'destructive' });
+      return false;
+    }
+
+    if ((user.stars || 0) < gift.price) {
+      toast({ title: 'Недостаточно звёзд', description: 'Пополните баланс', variant: 'destructive' });
+      return false;
+    }
+
+    gift.mintedCount = (gift.mintedCount || 0) + 1;
+
     const giftData = {
       id: `gift-${Date.now()}`,
       gift: gift,
@@ -639,18 +653,18 @@ const ChatApp = () => {
       stars: (user.stars || 0) - gift.price
     };
 
-    // If gifting to self, update user's receivedGifts
     if (selectedChat.id === user.id) {
       const receivedGifts = user.receivedGifts || [];
       updatedUser = {
         ...updatedUser,
         receivedGifts: [...receivedGifts, giftData]
       };
+      setSelfGiftAnimation(true);
+      setTimeout(() => setSelfGiftAnimation(false), 1200);
     }
-    
+
     setUser(updatedUser);
 
-    // Add gift to recipient's received gifts (for contacts)
     const updatedContacts = contacts.map(c => {
       if (c.id === selectedChat.id) {
         const receivedGifts = c.receivedGifts || [];
@@ -663,7 +677,6 @@ const ChatApp = () => {
     });
     setContacts(updatedContacts);
 
-    // Add gift message to chat
     const currentMessages = allMessages[selectedChat.id] || [];
     const giftMessage = {
       id: `msg-${Date.now()}`,
@@ -678,8 +691,9 @@ const ChatApp = () => {
       timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
       status: 'sent'
     };
-    
+
     updateMessagesForChat(selectedChat.id, [...currentMessages, giftMessage]);
+    return true;
   };
 
   const handleKeyPress = (e) => {
@@ -1085,7 +1099,7 @@ const ChatApp = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <img 
-                src="https://i.ibb.co/7tWc7T90/logo-round-corners.png" 
+                src="https://cdn.worldvectorlogo.com/logos/telegram-1.svg" 
                 alt="CL Logo" 
                 className="w-10 h-10 object-contain rounded-lg"
               />
@@ -1548,7 +1562,7 @@ const ChatApp = () => {
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-4">
               {selectedChat.isBot && (
-                <div className="bg-zinc-900 rounded-lg p-4">
+                <div className="bg-[#eaf4ff] border border-[#d0e5fa] rounded-2xl p-4">
                   <h4 className="font-semibold mb-2 flex items-center gap-2">
                     <Bot className="w-4 h-4" />
                     Команды бота
@@ -1631,21 +1645,19 @@ const ChatApp = () => {
               {selectedChat.receivedGifts && selectedChat.receivedGifts.length > 0 && (
                 <div className="bg-zinc-900 rounded-lg p-4">
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
-                    <Gift className="w-4 h-4 text-[#2fa34e]" />
+                    <Gift className="w-4 h-4 text-[#2aabee]" />
                     Полученные подарки ({selectedChat.receivedGifts.length})
                   </h4>
                   <div className="space-y-3">
                     {selectedChat.receivedGifts.slice(-3).reverse().map((receivedGift) => (
-                      <div key={receivedGift.id} className="bg-zinc-800 rounded-lg p-3 flex items-center gap-3">
-                        <img
-                          src={receivedGift.gift.image}
-                          alt={receivedGift.gift.nameRu}
-                          className="w-12 h-12 object-contain"
-                        />
+                      <div key={receivedGift.id} className="bg-white border border-[#d8eafc] rounded-xl p-3 flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-[#f3f9ff] border border-[#d7eafc] p-1">
+                          <LottieGift gift={receivedGift.gift} className="w-full h-full" />
+                        </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold truncate">{receivedGift.gift.nameRu}</p>
-                          <p className="text-xs text-zinc-400 truncate">От: {receivedGift.from.name}</p>
-                          <p className="text-xs text-zinc-500">{receivedGift.timestamp}</p>
+                          <p className="text-sm font-semibold truncate text-[#1f2f46]">{receivedGift.gift.name}</p>
+                          <p className="text-xs text-[#6783a2] truncate">От: {receivedGift.from.name}</p>
+                          <p className="text-xs text-[#8ca1bb]">{receivedGift.timestamp}</p>
                         </div>
                       </div>
                     ))}
@@ -2416,6 +2428,12 @@ const ChatApp = () => {
         </DialogContent>
       </Dialog>
 
+      {selfGiftAnimation && (
+        <div className="fixed inset-0 pointer-events-none z-[120] flex items-center justify-center animate-[fadeIn_.2s_ease-out]">
+          <div className="w-56 h-56 rounded-full bg-[#2aabee]/25 blur-3xl animate-pulse" />
+        </div>
+      )}
+
       {/* Gift Shop Modal */}
       <GiftShop
         isOpen={showGiftShop}
@@ -2424,6 +2442,7 @@ const ChatApp = () => {
         userStars={user.stars || 0}
         onSendGift={handleSendGift}
         customGifts={customGifts}
+        isAdmin={isAdmin}
       />
 
       {/* My Profile Modal */}
@@ -2470,6 +2489,7 @@ const ChatApp = () => {
         onlineUsers={onlineUsers}
         onDeleteGift={handleDeleteGift}
         customGifts={customGifts}
+        isAdmin={isAdmin}
       />
 
       {/* Registration Modal */}

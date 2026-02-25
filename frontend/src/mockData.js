@@ -1,3 +1,17 @@
+import plushPepeLottie from './assets/lottie/gifts/plush-pepe.json';
+import candyCaneLottie from './assets/lottie/gifts/candy-cane.json';
+import scaredCatLottie from './assets/lottie/gifts/scared-cat.json';
+import cakeLottie from './assets/lottie/gifts/cake.json';
+import wineLottie from './assets/lottie/gifts/wine.json';
+import lollipopLottie from './assets/lottie/gifts/lollipop.json';
+import spyAgaricLottie from './assets/lottie/gifts/spy-agaric.json';
+import astralShardLottie from './assets/lottie/gifts/astral-shard.json';
+import duckLottie from './assets/lottie/gifts/duck.json';
+import testGift1Lottie from './assets/lottie/gifts/test-gift-1.json';
+import testGift2Lottie from './assets/lottie/gifts/test-gift-2.json';
+import heartLottie from './assets/lottie/gifts/heart.json';
+import durovCapLottie from './assets/lottie/gifts/durov-cap.json';
+
 export const currentUser = {
   id: 'user-1',
   name: 'You',
@@ -5,7 +19,7 @@ export const currentUser = {
   avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
   phone: '+1 234 567 8900',
   status: 'online',
-  about: 'Hey there! I am using CL Messenger',
+  about: 'Hey there! I am using Nethgram',
   stars: 0,
   lastDailyReward: null,
   receivedGifts: [],
@@ -15,94 +29,19 @@ export const currentUser = {
 
 // Доступные подарки с тиражами
 export const availableGifts = [
-  {
-    id: 'candy-cane',
-    name: 'Candy Cane',
-    nameRu: 'Леденец-трость',
-    price: 15,
-    image: 'https://case-bot.com/images/cases/v3nRsNtveR5sjG9.png',
-    totalSupply: 100,
-    mintedCount: 0,
-    isRare: true
-  },
-  {
-    id: 'lolipop',
-    name: 'Lolipop',
-    nameRu: 'Леденец',
-    price: 50,
-    image: 'https://case-bot.com/images/cases/zFNBfMsaFhboT8P.png',
-    totalSupply: 5000,
-    mintedCount: 0
-  },
-  {
-    id: 'wine',
-    name: 'Wine',
-    nameRu: 'Вино',
-    price: 50,
-    image: 'https://case-bot.com/images/cases/3aoojXMpDqTqIwQ.png',
-    totalSupply: 100,
-    mintedCount: 0,
-    isRare: true
-  },
-  {
-    id: 'scared-cat',
-    name: 'Scared cat',
-    nameRu: 'Испуганный кот',
-    price: 100,
-    image: 'https://case-bot.com/images/cases/PQM9MVSTAF7sQ12.png',
-    totalSupply: 10000,
-    mintedCount: 0
-  },
-  {
-    id: 'teddy-bear',
-    name: 'Teddy bear',
-    nameRu: 'Плюшевый мишка',
-    price: 200,
-    image: 'https://case-bot.com/images/cases/pudbsohqxfD98gc.png',
-    totalSupply: 500,
-    mintedCount: 0,
-    isLimited: true
-  },
-  {
-    id: 'crystal-ball',
-    name: 'Crystal Ball',
-    nameRu: 'Хрустальный шар',
-    price: 555,
-    image: 'https://case-bot.com/images/cases/SP2aKi0WBrY1PGb.png',
-    totalSupply: 149,
-    mintedCount: 0,
-    isCollectible: true
-  },
-  {
-    id: 'diamond-shard',
-    name: 'Diamond Shard',
-    nameRu: 'Осколок алмаза',
-    price: 1700,
-    image: 'https://case-bot.com/images/cases/5LpaAvBpDfO92BV.png',
-    totalSupply: 2013,
-    mintedCount: 0,
-    isPremium: true
-  },
-  {
-    id: 'plush-pepe',
-    name: 'Plush Pepe',
-    nameRu: 'Плюшевый Пепе',
-    price: 2000,
-    image: 'https://case-bot.com/images/cases/bEtAjBRG6dnDDk0.png',
-    totalSupply: 2000,
-    mintedCount: 0,
-    isExclusive: true
-  },
-  {
-    id: 'joy',
-    name: 'Joy',
-    nameRu: 'Радость',
-    price: 5000,
-    image: 'https://cdn-icons-png.flaticon.com/512/166/166527.png',
-    totalSupply: 5,
-    mintedCount: 0,
-    isLegendary: true
-  }
+  { id: 'plush-pepe', name: 'Plush pepe', nameRu: 'Plush pepe', price: 2000, totalSupply: 500, mintedCount: 0, lottieData: plushPepeLottie, isExclusive: true },
+  { id: 'candy-cane', name: 'Candy cane', nameRu: 'Candy cane', price: 15, totalSupply: 5000, mintedCount: 0, lottieData: candyCaneLottie },
+  { id: 'scared-cat', name: 'Scared cat', nameRu: 'Scared cat', price: 100, totalSupply: 500, mintedCount: 0, lottieData: scaredCatLottie },
+  { id: 'cake', name: 'Cake', nameRu: 'Cake', price: 500, totalSupply: 3000, mintedCount: 0, lottieData: cakeLottie },
+  { id: 'wine', name: 'Wine', nameRu: 'Wine', price: 50, totalSupply: 450, mintedCount: 0, lottieData: wineLottie },
+  { id: 'lollipop', name: 'Lollipop', nameRu: 'Lollipop', price: 75, totalSupply: 1000, mintedCount: 0, lottieData: lollipopLottie },
+  { id: 'spy-agaric', name: 'Spy agaric', nameRu: 'Spy agaric', price: 200, totalSupply: 4000, mintedCount: 0, lottieData: spyAgaricLottie },
+  { id: 'astral-shard', name: 'Astral shard', nameRu: 'Astral shard', price: 555, totalSupply: 1487, mintedCount: 0, lottieData: astralShardLottie },
+  { id: 'duck', name: 'Duck', nameRu: 'Duck', price: 7000, totalSupply: 6500, mintedCount: 0, lottieData: duckLottie, isPremium: true },
+  { id: 'test-gift-1', name: 'Test gift 1', nameRu: 'Test gift 1', price: 10, totalSupply: 5, mintedCount: 0, lottieData: testGift1Lottie, adminOnly: true },
+  { id: 'test-gift-2', name: 'Test gift 2', nameRu: 'Test gift 2', price: 15, totalSupply: 10, mintedCount: 0, lottieData: testGift2Lottie, adminOnly: true },
+  { id: 'heart', name: 'Heart', nameRu: 'Heart', price: 175, totalSupply: null, mintedCount: 0, lottieData: heartLottie },
+  { id: 'durov-cap', name: 'Durov cap', nameRu: 'Durov cap', price: 10000, totalSupply: null, mintedCount: 0, lottieData: durovCapLottie, isLegendary: true }
 ];
 
 // NFT градиенты

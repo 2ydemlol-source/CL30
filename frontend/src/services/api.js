@@ -1,4 +1,4 @@
-// API Service for CL Messenger
+// API Service for Nethgram
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
